@@ -1,0 +1,97 @@
+/* =====================================================================
+   ABDITORY — Google Apps Script reference
+   ---------------------------------------------------------------------
+   You told me your Web App is already deployed, so this file is only a
+   reference. But there is ONE detail that breaks this setup more often
+   than anything else, so please check your script against it:
+
+   THE SITE SENDS THE BODY AS text/plain, NOT application/json.
+
+   It has to. The browser blocks a cross-origin POST to Apps Script
+   unless it is sent with mode:"no-cors", and in that mode only three
+   Content-Type values are allowed: text/plain,
+   application/x-www-form-urlencoded, and multipart/form-data.
+   "application/json" would trigger a CORS preflight that Apps Script
+   cannot answer, and every submission would silently fail.
+
+   The body is still JSON. So in your script you must read it with:
+
+       JSON.parse(e.postData.contents)
+
+   NOT e.parameter.name / e.parameter.email — those stay empty with a
+   raw body like this, which is the usual reason a sheet stays blank
+   while the site happily shows "success".
+
+   ---------------------------------------------------------------------
+   The keys the site sends, in this order:
+     sourcePage, product, name, email, instagram,
+     country, shoeSize, requestType, message
+   ---------------------------------------------------------------------
+   If your deployed script already works, ignore all of this.
+   ===================================================================== */
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Orders')
+             || SpreadsheetApp.getActiveSpreadsheet().insertSheet('Orders');
+
+    // Write the header row once, on the first submission.
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        'Received', 'Source page', 'Product', 'Name', 'Email',
+        'Instagram', 'Country', 'Shoe size', 'Request type', 'Message'
+      ]);
+      sheet.getRange(1, 1, 1, 10).setFontWeight('bold');
+      sheet.setFrozenRows(1);
+    }
+
+    sheet.appendRow([
+      new Date(),
+      data.sourcePage || '',
+      data.product || '',
+      data.name || '',
+      data.email || '',
+      data.instagram || '',
+      data.country || '',
+      data.shoeSize || '',
+      data.requestType || '',
+      data.message || ''
+    ]);
+
+    // Optional: email yourself so an order does not sit unseen in a tab.
+    // MailApp.sendEmail({
+    //   to: 'you@example.com',
+    //   subject: 'ABDITORY — new request from ' + (data.name || 'someone'),
+    //   body: JSON.stringify(data, null, 2)
+    // });
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    // Log it so a malformed submission is still traceable in Executions.
+    console.error('ABDITORY form error: ' + err + ' | raw: ' +
+      (e && e.postData ? e.postData.contents : 'no body'));
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   DEPLOYMENT SETTINGS THAT MATTER
+
+   Deploy → New deployment → Web app
+     Execute as:        Me
+     Who has access:    Anyone            <-- must be "Anyone", not
+                                              "Anyone with Google account"
+
+   If you change the script later, use
+     Deploy → Manage deployments → (pencil) → Version: New version
+   That keeps the SAME /exec URL. Creating a brand new deployment gives
+   you a new URL, and you would have to update formEndpoint in
+   data/site.js to match.
+   --------------------------------------------------------------------- */

@@ -9,6 +9,22 @@ window.ABDITORY_SITE = {
   instagramUrl: "https://instagram.com/abditorystars",
   email: "", // e.g. "hello@abditory.com" — leave "" to hide the email line
 
+  /* ===================================================================
+     ORDER FORM ENDPOINT
+     -------------------------------------------------------------------
+     Where the order/enquiry forms send their submissions. This is the
+     Google Apps Script Web App URL — THE ONLY PLACE it appears in the
+     whole site. If you ever redeploy the script, change it here and
+     nowhere else.
+
+     If you redeploy: Apps Script gives you a NEW /exec URL each time you
+     create a new deployment version. Use "Manage deployments → edit →
+     New version" instead, and the URL stays the same.
+
+     Set this to "" to switch every form off and fall back to Instagram.
+     =================================================================== */
+  formEndpoint: "https://script.google.com/macros/s/AKfycbyPHfQIb0vdYu4sdUegj5O22fJnuPhySw0Z2gJ8sshVb6yLWhx7ocNTKcNQS4S0n1XFYQ/exec",
+
   // Currency shown next to any price you set in products.js.
   // "₾" for lari, "€", "$", or write it out as "GEL" if you prefer.
   currency: "₾",
@@ -41,6 +57,7 @@ window.ABDITORY_I18N = {
     "nav.catalogue": "Catalogue",
     "nav.custom": "Custom orders",
     "nav.about": "About",
+    "nav.order": "Order",
     "nav.contact": "Contact",
     "nav.menu": "Menu",
     "nav.close": "Close",
@@ -108,8 +125,8 @@ window.ABDITORY_I18N = {
     "about.stat3.l": "How it is made",
 
     "contact.eyebrow": "Get in touch",
-    "contact.title": "Orders happen in the DMs",
-    "contact.sub": "No checkout, no cart. Message us, tell us what you want, and we will take it from there.",
+    "contact.title": "Or just message us",
+    "contact.sub": "The form above reaches us the same way. If you would rather talk it through, our DMs are always open.",
     "contact.cta": "Message @abditorystars",
     "contact.ship.t": "Shipping",
     "contact.ship.d": "We ship worldwide with tracking. Cost and delivery time depend on the destination — ask when you message and we will quote you.",
@@ -121,13 +138,52 @@ window.ABDITORY_I18N = {
     "footer.rights": "All rights reserved.",
     "footer.made": "Custom-made in Tbilisi · Shipped worldwide",
     "footer.nav": "Navigate",
-    "footer.follow": "Follow"
+    "footer.follow": "Follow",
+
+    "form.eyebrow": "Place an order",
+    "form.title": "Tell us what you want made",
+    "form.intro": "Fill this in and it lands with us straight away. We reply on Instagram, so leave your handle if you would rather talk there.",
+    "form.name": "Name",
+    "form.email": "Email",
+    "form.instagram": "Instagram username",
+    "form.country": "Country",
+    "form.size": "Shoe size (EU)",
+    "form.size_ph": "Choose your size",
+    "form.type": "Request type",
+    "form.type_ph": "What is this about?",
+    "form.type.custom": "Custom shoes order",
+    "form.type.accessory": "Accessory order",
+    "form.type.question": "Question",
+    "form.type.other": "Other",
+    "form.type.product": "Product order",
+    "form.message": "Message / details",
+    "form.message_ph": "Colours, materials, heel height, hardware, references — anything you have in mind. Links to photos help.",
+    "form.optional": "optional",
+    "form.product_label": "Ordering",
+    "form.submit": "Send request",
+    "form.submit_product": "Order this item",
+    "form.sending": "Sending",
+    "form.or": "or",
+    "form.err.name": "Please tell us your name.",
+    "form.err.email": "Please leave an email.",
+    "form.err.email_bad": "That email does not look right.",
+    "form.err.country": "We need your country to quote shipping.",
+    "form.err.size": "Please choose a size.",
+    "form.err.type": "Please choose what this is about.",
+    "form.err.message": "Please describe what you would like made.",
+    "form.ok.title": "Your request is with us ✧",
+    "form.ok.body": "We'll reach out within 24h — check your Instagram DMs.",
+    "form.ok.cta": "Open @abditorystars",
+    "form.fail.title": "That did not go through",
+    "form.fail.body": "Something blocked the message on the way. Send it to us on Instagram instead — nothing gets lost there.",
+    "form.fail.cta": "Message us on Instagram"
   },
 
   ka: {
     "nav.catalogue": "კატალოგი",
     "nav.custom": "ინდივიდუალური შეკვეთა",
     "nav.about": "ჩვენ შესახებ",
+    "nav.order": "შეკვეთა",
     "nav.contact": "კონტაქტი",
     "nav.menu": "მენიუ",
     "nav.close": "დახურვა",
@@ -195,8 +251,8 @@ window.ABDITORY_I18N = {
     "about.stat3.l": "როგორ მზადდება",
 
     "contact.eyebrow": "დაგვიკავშირდით",
-    "contact.title": "შეკვეთა პირად შეტყობინებაში",
-    "contact.sub": "არც კალათა, არც გადახდის გვერდი. უბრალოდ მოგვწერეთ, რა გინდათ — დანარჩენს ჩვენ მოვაგვარებთ.",
+    "contact.title": "ან უბრალოდ მოგვწერეთ",
+    "contact.sub": "ზემოთ არსებული ფორმაც ჩვენთან მოდის. თუ საუბარი გირჩევნიათ, პირადი შეტყობინებები ყოველთვის ღიაა.",
     "contact.cta": "მოგვწერეთ @abditorystars",
     "contact.ship.t": "მიწოდება",
     "contact.ship.d": "ვაგზავნით მთელ მსოფლიოში თრექინგით. ღირებულება და ვადა დამოკიდებულია ქვეყანაზე — მოგვწერეთ და გეტყვით.",
@@ -208,6 +264,44 @@ window.ABDITORY_I18N = {
     "footer.rights": "ყველა უფლება დაცულია.",
     "footer.made": "ხელით დამზადებული თბილისში · იგზავნება მსოფლიოში",
     "footer.nav": "ნავიგაცია",
-    "footer.follow": "გამოგვყევით"
+    "footer.follow": "გამოგვყევით",
+
+    "form.eyebrow": "შეკვეთის გაფორმება",
+    "form.title": "მოგვწერეთ, რის დამზადება გსურთ",
+    "form.intro": "შეავსეთ და მაშინვე მოგვივა. პასუხს Instagram-ზე გწერთ, ამიტომ დატოვეთ თქვენი მომხმარებლის სახელი, თუ იქ გირჩევნიათ საუბარი.",
+    "form.name": "სახელი",
+    "form.email": "ელფოსტა",
+    "form.instagram": "Instagram-ის მომხმარებელი",
+    "form.country": "ქვეყანა",
+    "form.size": "ფეხსაცმლის ზომა (EU)",
+    "form.size_ph": "აირჩიეთ ზომა",
+    "form.type": "მოთხოვნის ტიპი",
+    "form.type_ph": "რაზეა საუბარი?",
+    "form.type.custom": "ინდივიდუალური ფეხსაცმლის შეკვეთა",
+    "form.type.accessory": "აქსესუარის შეკვეთა",
+    "form.type.question": "კითხვა",
+    "form.type.other": "სხვა",
+    "form.type.product": "პროდუქტის შეკვეთა",
+    "form.message": "შეტყობინება / დეტალები",
+    "form.message_ph": "ფერები, მასალა, ქუსლის სიმაღლე, ფურნიტურა, მაგალითები — ყველაფერი, რაც წარმოგიდგენიათ. ფოტოების ბმულებიც დაგვეხმარება.",
+    "form.optional": "სურვილისამებრ",
+    "form.product_label": "შეკვეთა",
+    "form.submit": "მოთხოვნის გაგზავნა",
+    "form.submit_product": "ამ ნივთის შეკვეთა",
+    "form.sending": "იგზავნება",
+    "form.or": "ან",
+    "form.err.name": "მიუთითეთ თქვენი სახელი.",
+    "form.err.email": "დატოვეთ ელფოსტა.",
+    "form.err.email_bad": "ეს ელფოსტა არასწორად გამოიყურება.",
+    "form.err.country": "ქვეყანა გვჭირდება მიწოდების ფასის დასათვლელად.",
+    "form.err.size": "აირჩიეთ ზომა.",
+    "form.err.type": "აირჩიეთ, რაზეა საუბარი.",
+    "form.err.message": "აღწერეთ, რის დამზადება გსურთ.",
+    "form.ok.title": "თქვენი მოთხოვნა მიღებულია ✧",
+    "form.ok.body": "24 საათში დაგიკავშირდებით — შეამოწმეთ Instagram-ის შეტყობინებები.",
+    "form.ok.cta": "გახსენით @abditorystars",
+    "form.fail.title": "გაგზავნა ვერ მოხერხდა",
+    "form.fail.body": "რაღაცამ შეაფერხა შეტყობინება. მოგვწერეთ Instagram-ზე — იქ არაფერი იკარგება.",
+    "form.fail.cta": "მოგვწერეთ Instagram-ზე"
   }
 };

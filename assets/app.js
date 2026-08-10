@@ -242,6 +242,29 @@
     var order = $("#qvOrder");
     order.hidden = !!p.sold_out;
 
+    /* Order form for this product. Sold-out pieces get no form — there is
+       nothing to order — but the Instagram link stays so they can ask. */
+    var qvForm = $("#qvForm");
+    if (qvForm) {
+      if (p.sold_out || !window.ABDITORY_FORM) {
+        qvForm.innerHTML = "";
+        qvForm.hidden = true;
+        var div = $(".qv__divider");
+        if (div) div.hidden = true;
+      } else {
+        qvForm.hidden = false;
+        var div2 = $(".qv__divider");
+        if (div2) div2.hidden = false;
+        window.ABDITORY_FORM.mount(qvForm, { context: "product", product: p });
+      }
+    }
+
+    /* Give the product a shareable address, so a single piece can be
+       linked from an Instagram story: index.html#product/STM-01 */
+    if (history.replaceState) {
+      history.replaceState(null, "", "#product/" + p.id);
+    }
+
     qv.classList.add("is-open");
     qv.setAttribute("aria-hidden", "false");
     document.body.classList.add("is-locked");
@@ -253,7 +276,22 @@
     qv.classList.remove("is-open");
     qv.setAttribute("aria-hidden", "true");
     document.body.classList.remove("is-locked");
+    if (history.replaceState && location.hash.indexOf("#product/") === 0) {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
     if (lastFocus) lastFocus.focus();
+  }
+
+  /* Open straight onto a product when the page is loaded with
+     #product/<id> — the link you would put in an Instagram story. */
+  function openFromHash() {
+    var m = /^#product\/(.+)$/.exec(location.hash);
+    if (!m) return;
+    var id = decodeURIComponent(m[1]);
+    if (!PRODUCTS.some(function (p) { return p.id === id; })) return;
+    var cat = $("#catalogue");
+    if (cat) cat.scrollIntoView();
+    openQuickView(id);
   }
 
   if (qv) {
@@ -359,6 +397,7 @@
      =================================================================== */
   function applyLang() {
     document.documentElement.lang = lang;
+    window.ABDITORY_LANG = lang;          // form.js reads this
     $$("[data-i18n]").forEach(function (el) {
       var val = t(el.dataset.i18n);
       if (val) el.textContent = val;
@@ -366,7 +405,19 @@
     buildMarquee();
     renderHero();
     renderGrid();
+    mountOrderForm();
     applySite();
+  }
+
+  /* ===================================================================
+     ORDER FORM (landing page)
+     =================================================================== */
+  function mountOrderForm() {
+    var host = $("#orderForm");
+    if (!host || !window.ABDITORY_FORM) return;
+    window.ABDITORY_FORM.mount(host, { context: "landing" });
+    /* the form is rebuilt on language change, so re-arm its reveals */
+    bindReveals();
   }
 
   function bindLang() {
@@ -389,16 +440,20 @@
      INIT
      =================================================================== */
   function init() {
+    window.ABDITORY_LANG = lang;
     buildStarfield();
     buildMarquee();
     renderHero();
     renderAboutFigure();
     renderGrid();
+    mountOrderForm();
     bindFilters();
     bindHeader();
     bindReveals();
     bindLang();
     applySite();
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
   }
 
   if (document.readyState === "loading") {

@@ -105,6 +105,42 @@ stay as they are unless you want to change them.
 
 ---
 
+## The order forms
+
+Two forms, one component (`assets/form.js`):
+
+- **Landing page**, in the "Place an order" section before Contact. The
+  customer picks the request type; the shoe-size field only appears if
+  they choose *Custom shoes order*.
+- **Every product**, inside the quick-view panel. Request type is locked
+  to *Product order*, the product name and code are filled in for them,
+  and shoe size shows only for footwear.
+
+Both send to the Google Apps Script Web App set in `data/site.js` as
+`formEndpoint` — **the only place that URL appears**. Set it to `""` to
+switch every form off and fall back to Instagram.
+
+Submissions arrive with these keys: `sourcePage`, `product`, `name`,
+`email`, `instagram`, `country`, `shoeSize`, `requestType`, `message`.
+
+**One thing to check on the Google side:** the body is sent as
+`text/plain`, not `application/json` — it has to be, or the browser
+blocks the request. Your script must read it with
+`JSON.parse(e.postData.contents)`, not `e.parameter`. See
+`apps-script-reference.gs.txt` for a working example. If your sheet ever
+stays empty while the site says "success", this is almost always why.
+
+A hidden honeypot field filters bots. If it gets filled the submission is
+dropped silently and the bot still sees a success message.
+
+### Shareable product links
+
+Opening a product updates the address to `#product/STM-01`. Paste that
+link in an Instagram story and it opens straight onto that piece with its
+order form ready.
+
+---
+
 ## Adding a product
 
 Open `data/products.js`, copy one block between `{ }`, change the values.

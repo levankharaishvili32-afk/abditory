@@ -65,6 +65,7 @@
           <li><a class="nav__link" href="#catalogue" data-i18n="nav.catalogue">Catalogue</a></li>
           <li><a class="nav__link" href="#custom" data-i18n="nav.custom">Custom orders</a></li>
           <li><a class="nav__link" href="#about" data-i18n="nav.about">About</a></li>
+          <li><a class="nav__link" href="#order" data-i18n="nav.order">Order</a></li>
           <li><a class="nav__link" href="#contact" data-i18n="nav.contact">Contact</a></li>
         </ul>
       </nav>
@@ -102,7 +103,8 @@
         <li><a class="menu__link" href="#catalogue"><span class="idx">01</span><span data-i18n="nav.catalogue">Catalogue</span></a></li>
         <li><a class="menu__link" href="#custom"><span class="idx">02</span><span data-i18n="nav.custom">Custom orders</span></a></li>
         <li><a class="menu__link" href="#about"><span class="idx">03</span><span data-i18n="nav.about">About</span></a></li>
-        <li><a class="menu__link" href="#contact"><span class="idx">04</span><span data-i18n="nav.contact">Contact</span></a></li>
+        <li><a class="menu__link" href="#order"><span class="idx">04</span><span data-i18n="nav.order">Order</span></a></li>
+        <li><a class="menu__link" href="#contact"><span class="idx">05</span><span data-i18n="nav.contact">Contact</span></a></li>
       </ul>
       <div class="menu__foot">
         <span data-i18n="footer.made">Custom-made in Tbilisi · Shipped worldwide</span>
@@ -295,7 +297,19 @@
     </section>
 
     <!-- ============================================================
-         5. CONTACT
+         5. ORDER / ENQUIRY FORM
+         The form is built by assets/form.js and mounted here, so the
+         landing version and the product version never drift apart.
+         ============================================================ -->
+    <section class="section order" id="order">
+      <div class="shell order__inner" id="orderForm"></div>
+    </section>
+
+    <!-- ============================================================
+         6. CONTACT
+         Sits after the form on purpose: the form is the main path,
+         this is the "I would rather just DM you" alternative plus the
+         practical shipping / payment / sizing answers.
          ============================================================ -->
     <section class="section section--alt contact" id="contact">
       <div class="shell">
@@ -305,8 +319,8 @@
             <i class="star" aria-hidden="true"></i>
             <span data-i18n="contact.eyebrow">Get in touch</span>
           </span>
-          <h2 class="contact__title" data-i18n="contact.title">Orders happen in the DMs</h2>
-          <p class="contact__sub" data-i18n="contact.sub">No checkout, no cart. Message us, tell us what you want, and we will take it from there.</p>
+          <h2 class="contact__title" data-i18n="contact.title">Or just message us</h2>
+          <p class="contact__sub" data-i18n="contact.sub">The form above reaches us the same way. If you would rather talk it through, our DMs are always open.</p>
           <a class="btn btn--blood js-ig" href="#" target="_blank" rel="noopener">
             <span data-i18n="contact.cta">Message @abditorystars</span>
           </a>
@@ -353,6 +367,7 @@
             <li><a href="#catalogue" data-i18n="nav.catalogue">Catalogue</a></li>
             <li><a href="#custom" data-i18n="nav.custom">Custom orders</a></li>
             <li><a href="#about" data-i18n="nav.about">About</a></li>
+            <li><a href="#order" data-i18n="nav.order">Order</a></li>
             <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
           </ul>
         </div>
@@ -402,11 +417,16 @@
           <ul id="qvSpecs"></ul>
         </div>
         <div class="qv__order">
+          <!-- Order form for this product, built by assets/form.js -->
+          <div id="qvForm"></div>
+
+          <div class="qv__divider" aria-hidden="true"><span data-i18n="form.or">or</span></div>
+
           <div class="qv__code">
             <span data-i18n="product.code">Mention code</span>
             <strong id="qvCode"></strong>
           </div>
-          <a class="btn btn--blood btn--full js-ig" id="qvOrder" href="#" target="_blank" rel="noopener">
+          <a class="btn btn--full js-ig" id="qvOrder" href="#" target="_blank" rel="noopener">
             <span data-i18n="product.order">Order on Instagram</span>
           </a>
           <p class="qv__note" data-i18n="product.dmnote">Orders are taken by direct message. Send us the code above and your size.</p>
@@ -418,6 +438,7 @@
 
 <script src="data/site.js"></script>
 <script src="data/products.js"></script>
+<script src="assets/form.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>

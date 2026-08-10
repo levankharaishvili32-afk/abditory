@@ -15,6 +15,7 @@
    12. About
    13. Contact & footer
    14. Motion & reveals
+   15. Order / enquiry form
    ===================================================================== */
 
 /* =====================================================================
@@ -1330,3 +1331,273 @@ h3 { font-size: var(--t-h3); line-height: 1.15; }
   .grid { grid-template-columns: repeat(4, 1fr); }
   .contact__title { font-size: clamp(2.6rem, 4.4vw, 4rem); }
 }
+
+/* =====================================================================
+   15. ORDER / ENQUIRY FORM
+   ---------------------------------------------------------------------
+   Built entirely from the tokens in section 1, so changing --blood-200
+   or --star-200 restyles the form along with the rest of the site.
+   Inputs sit on a slightly raised surface rather than being outlined
+   boxes — closer to the editorial feel than a standard web form.
+   ===================================================================== */
+
+.form { display: flex; flex-direction: column; gap: 1.75rem; }
+
+.form__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+/* --- product line, shown only in the quick-view version -------------- */
+.form__product {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line-soft);
+  background:
+    linear-gradient(to right, rgba(142, 26, 43, 0.14), transparent 70%),
+    var(--ink-100);
+}
+.form__product-label {
+  font-size: var(--t-label);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-400);
+}
+.form__product-name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.05rem;
+  color: var(--text-100);
+}
+.form__product-code {
+  font-size: var(--t-small);
+  letter-spacing: 0.14em;
+  color: var(--star-300);
+  margin-left: auto;
+}
+
+/* --- fields ---------------------------------------------------------- */
+.field { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+
+/* A class selector beats the browser's built-in [hidden] rule, so the
+   conditional size field would stay on screen without this. */
+.field[hidden],
+.qv__divider[hidden],
+#qvForm[hidden] { display: none; }
+
+.field__label {
+  font-size: var(--t-label);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-300);
+  transition: color 0.3s var(--ease);
+}
+.field__opt {
+  letter-spacing: 0.14em;
+  color: var(--text-400);
+  text-transform: none;
+}
+
+.field__control { position: relative; display: flex; align-items: stretch; }
+
+.field__input {
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;                 /* 16px — stops iOS zooming on focus */
+  font-weight: 300;
+  color: var(--text-100);
+  background: var(--ink-100);
+  border: 1px solid var(--line-soft);
+  border-radius: 0;
+  padding: 0.95rem 1rem;           /* ~48px tall: comfortable thumb target */
+  transition: border-color 0.35s var(--ease), background 0.35s var(--ease), box-shadow 0.35s var(--ease);
+  appearance: none;
+  -webkit-appearance: none;
+}
+.field__input::placeholder { color: var(--text-400); }
+
+.field__input:hover { border-color: var(--line-mid); }
+
+.field__input:focus {
+  outline: none;
+  background: var(--ink-200);
+  border-color: var(--star-200);
+  box-shadow: 0 0 0 1px var(--star-200), 0 0 24px -6px rgba(216, 220, 230, 0.35);
+}
+
+.field__input--area {
+  resize: vertical;
+  min-height: 8.5rem;
+  line-height: 1.6;
+}
+
+/* selects get their own chevron, since appearance:none removes the native one */
+select.field__input {
+  padding-right: 2.6rem;
+  background-image: linear-gradient(45deg, transparent 50%, var(--star-300) 50%),
+                    linear-gradient(135deg, var(--star-300) 50%, transparent 50%);
+  background-position: calc(100% - 1.15rem) 55%, calc(100% - 0.85rem) 55%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+select.field__input option { background: var(--ink-100); color: var(--text-100); }
+
+/* --- the @ prefix on the Instagram field ----------------------------- */
+.field__control--prefix .field__prefix {
+  display: flex;
+  align-items: center;
+  padding-inline: 1rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--star-300);
+  background: var(--ink-100);
+  border: 1px solid var(--line-soft);
+  border-right: none;
+  transition: border-color 0.35s var(--ease), color 0.35s var(--ease);
+}
+.field__control--prefix .field__input { border-left: none; }
+.field__control--prefix:focus-within .field__prefix {
+  border-color: var(--star-200);
+  color: var(--star-200);
+}
+.field__control--prefix:focus-within .field__input {
+  box-shadow: 0 1px 0 0 var(--star-200), 0 -1px 0 0 var(--star-200), 1px 0 0 0 var(--star-200);
+}
+
+/* --- error state ------------------------------------------------------ */
+.field__error {
+  font-size: var(--t-small);
+  line-height: 1.4;
+  color: var(--blood-100);
+  min-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.field.is-invalid .field__error { opacity: 1; transform: none; }
+.field.is-invalid .field__label { color: var(--blood-100); }
+.field.is-invalid .field__input,
+.field.is-invalid .field__prefix { border-color: var(--blood-200); }
+.field.is-invalid .field__input:focus {
+  border-color: var(--blood-100);
+  box-shadow: 0 0 0 1px var(--blood-100), 0 0 24px -6px rgba(192, 42, 65, 0.45);
+}
+
+/* conditional size field slides in rather than snapping */
+.field--size.is-open { animation: fieldIn 0.45s var(--ease); }
+@keyframes fieldIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* --- honeypot: off-screen, never focusable, invisible to real users --- */
+.form__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form__actions { display: flex; }
+.form__actions .btn { min-width: 14rem; }
+.form__actions .btn:disabled { cursor: wait; opacity: 0.75; }
+
+/* animated ellipsis while the request is in flight */
+.btn.is-loading span::after {
+  content: "";
+  animation: dots 1.2s steps(4, end) infinite;
+}
+@keyframes dots {
+  0%   { content: ""; }
+  25%  { content: "."; }
+  50%  { content: ".."; }
+  75%  { content: "..."; }
+}
+
+/* --- result states ---------------------------------------------------- */
+.form-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: clamp(1.75rem, 5vw, 2.75rem);
+  border: 1px solid var(--line-soft);
+  background:
+    radial-gradient(90% 130% at 0% 0%, rgba(216, 220, 230, 0.07), transparent 60%),
+    var(--ink-100);
+  animation: fieldIn 0.6s var(--ease);
+}
+.form-result--fail {
+  background:
+    radial-gradient(90% 130% at 0% 0%, rgba(142, 26, 43, 0.18), transparent 60%),
+    var(--ink-100);
+  border-color: var(--blood-300);
+}
+.form-result__star {
+  color: var(--star-200);
+  font-size: 1.4rem;
+  animation: twinkle 4s var(--ease-in-out) infinite;
+}
+.form-result__title {
+  font-family: var(--font-display);
+  font-size: var(--t-h3);
+  color: var(--text-100);
+}
+.form-result__body { color: var(--text-300); max-width: 40ch; }
+
+/* --- the landing-page section ---------------------------------------- */
+.order { position: relative; }
+.order__inner { display: grid; gap: clamp(2rem, 5vw, 3.5rem); }
+.form__head { margin-bottom: 0; }
+
+/* --- the quick-view version ------------------------------------------ */
+.form--compact { gap: 1.25rem; }
+.form--compact .form__grid { gap: 1rem; }
+.qv__divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: var(--t-label);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--text-400);
+  margin-block: 0.35rem;
+}
+.qv__divider::before,
+.qv__divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: var(--line-soft);
+}
+
+@media (min-width: 560px) {
+  .form__grid { grid-template-columns: 1fr 1fr; }
+  .field--wide { grid-column: 1 / -1; }
+}
+
+@media (min-width: 900px) {
+  .order__inner { grid-template-columns: 0.85fr 1.15fr; align-items: start; }
+  .form__head { position: sticky; top: 7rem; }
+}
+
+/* The quick-view panel is narrow even on desktop — keep it single column
+   until it is genuinely wide enough for pairs. */
+@media (max-width: 1023px) {
+  .form--compact .form__grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* The result state replaces the form only, so the section heading in the
+   left column stays put and the confirmation lands where the form was. */
+.form__slot { min-width: 0; }
+
+/* The quick-view column is narrow — a two-up size select truncates its
+   own placeholder, so give it the full width there. */
+.form--compact .field--size { grid-column: 1 / -1; }
