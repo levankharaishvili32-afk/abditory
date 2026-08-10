@@ -35,7 +35,35 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000`.
 
-## Publishing it (GitHub Pages)
+## Publishing it (Vercel — the live site)
+
+The site is hosted on Vercel, connected to the GitHub repo. You do not
+touch Vercel again after the first setup:
+
+**run `push-to-github.bat` → Vercel notices → site updates in ~30 seconds.**
+
+First-time setup (once only):
+
+1. Sign in at https://vercel.com with **Continue with GitHub**
+2. **Add New… → Project**, pick the `abditory` repo, click **Import**
+3. Framework Preset: **Other**. Leave Build Command and Output Directory
+   empty — there is nothing to build
+4. **Deploy**
+
+`vercel.json` is already in the repo. It sets cache rules — fonts cached
+for a year (their names never change), photos and code for an hour, so
+when you swap a product photo it appears quickly instead of being stuck
+in someone's browser cache.
+
+### Adding your own domain later
+
+Vercel → your project → **Settings → Domains → Add**. Vercel then tells
+you exactly which DNS records to create at whoever sold you the domain.
+The HTTPS certificate is issued automatically.
+
+---
+
+## Alternative: GitHub Pages
 
 Double-click **`push-to-github.bat`** and follow what it says. In short:
 
