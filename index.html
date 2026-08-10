@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABDITORY — Custom-made gothic footwear &amp; accessories, Tbilisi</title>
+
+<meta name="description" content="ABDITORY is a small Tbilisi workshop making gothic footwear and accessories to order. Made by hand to your measurements. Worldwide shipping. Orders via Instagram @abditorystars.">
+<meta name="theme-color" content="#08080b">
+
+<!-- Open Graph — this is what shows when the link is shared or put in the
+     Instagram bio. Replace the image once you have a hero photo:
+     put it in /images and change the two og/twitter image lines. -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="ABDITORY — Custom-made gothic footwear">
+<meta property="og:description" content="Made by hand in Tbilisi, to your measurements. Worldwide shipping.">
+<meta property="og:image" content="images/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="images/og.jpg">
+
+<!-- Fonts. Self-hosted in assets/fonts — nothing loads from Google, so
+     the site is faster on mobile and does not break on networks that
+     block third-party font CDNs. See assets/fonts.css for how the
+     Latin and Georgian faces are paired under one family name. -->
+<!-- No <link rel="preload"> for the fonts on purpose: preloading a font
+     requires crossorigin, which browsers reject when the page is opened
+     straight off the disk (file://). The fonts still load fine from
+     fonts.css either way, and this keeps the console clean when you just
+     double-click index.html. -->
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+
+<body>
+
+<a class="skip-link" href="#catalogue">Skip to catalogue</a>
+
+<!-- Atmosphere layers: film grain + a sparse starfield generated in app.js -->
+<div class="grain" aria-hidden="true"></div>
+<div class="starfield" id="starfield" aria-hidden="true"></div>
+
+<div class="page">
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header class="header" id="header">
+    <div class="shell header__inner">
+
+      <a class="brand" href="#top" aria-label="ABDITORY — home">
+        <i class="star" aria-hidden="true"></i>
+        <span>Abditory</span>
+      </a>
+
+      <nav class="nav" aria-label="Main">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="#catalogue" data-i18n="nav.catalogue">Catalogue</a></li>
+          <li><a class="nav__link" href="#custom" data-i18n="nav.custom">Custom orders</a></li>
+          <li><a class="nav__link" href="#about" data-i18n="nav.about">About</a></li>
+          <li><a class="nav__link" href="#contact" data-i18n="nav.contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header__actions">
+
+        <!-- Language switch. Hidden until you set georgianEnabled: true
+             in data/site.js — see the README. -->
+        <div class="lang" id="lang">
+          <button type="button" data-lang="en" class="is-active">EN</button>
+          <span class="lang__sep" aria-hidden="true">/</span>
+          <button type="button" data-lang="ka">ქარ</button>
+        </div>
+
+        <a class="ig-btn" id="igHeader" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+          <span class="ig-btn__label" id="igHandle">@abditorystars</span>
+        </a>
+
+        <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div class="menu" id="menu">
+    <nav class="shell" aria-label="Mobile">
+      <ul class="menu__list">
+        <li><a class="menu__link" href="#catalogue"><span class="idx">01</span><span data-i18n="nav.catalogue">Catalogue</span></a></li>
+        <li><a class="menu__link" href="#custom"><span class="idx">02</span><span data-i18n="nav.custom">Custom orders</span></a></li>
+        <li><a class="menu__link" href="#about"><span class="idx">03</span><span data-i18n="nav.about">About</span></a></li>
+        <li><a class="menu__link" href="#contact"><span class="idx">04</span><span data-i18n="nav.contact">Contact</span></a></li>
+      </ul>
+      <div class="menu__foot">
+        <span data-i18n="footer.made">Custom-made in Tbilisi · Shipped worldwide</span>
+        <a class="tlink js-ig" href="#" target="_blank" rel="noopener">@abditorystars</a>
+      </div>
+    </nav>
+  </div>
+
+  <main id="top">
+
+    <!-- ============================================================
+         1. HERO
+         ============================================================ -->
+    <section class="hero">
+      <div class="shell hero__grid">
+
+        <div class="hero__copy">
+          <span class="eyebrow" data-reveal>
+            <i class="star" aria-hidden="true"></i>
+            <span data-i18n="hero.eyebrow">Custom-made in Tbilisi · Worldwide shipping</span>
+          </span>
+
+          <h1 class="hero__title" data-reveal>
+            <span data-i18n="hero.line1">Made to your</span>
+            <em data-i18n="hero.line2">measure</em>
+          </h1>
+
+          <p class="lede" data-reveal data-i18n="hero.sub">
+            Gothic footwear and accessories, made by hand — one pair, one person, no two the same.
+          </p>
+
+          <div class="hero__actions" data-reveal>
+            <a class="btn" href="#catalogue"><span data-i18n="hero.cta1">See the catalogue</span></a>
+            <a class="btn btn--blood js-ig" href="#" target="_blank" rel="noopener"><span data-i18n="hero.cta2">Order on Instagram</span></a>
+          </div>
+        </div>
+
+        <div class="hero__scroll" aria-hidden="true">
+          <span data-i18n="hero.scroll">Scroll</span>
+        </div>
+
+        <!-- Filled automatically with the product marked featured:true
+             in data/products.js, once that product has images. -->
+        <figure class="hero__figure" id="heroFigure" data-reveal>
+          <figcaption class="hero__figcap">
+            <i class="star" aria-hidden="true"></i>
+            <span id="heroCap">Vesper Platform Boot</span>
+          </figcaption>
+        </figure>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         MARQUEE
+         ============================================================ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track" id="marquee"></div>
+    </div>
+
+    <!-- ============================================================
+         2. CATALOGUE
+         ============================================================ -->
+    <section class="section" id="catalogue">
+      <div class="shell">
+
+        <div class="section-head" data-reveal>
+          <span class="eyebrow">
+            <i class="star" aria-hidden="true"></i>
+            <span data-i18n="cat.eyebrow">The range</span>
+          </span>
+          <h2 data-i18n="cat.title">Catalogue</h2>
+          <p data-i18n="cat.intro">Everything is made to order. Sizes, heights, hardware and finishes are chosen with you before anything is cut.</p>
+        </div>
+
+        <div class="filters" role="tablist" aria-label="Filter products" data-reveal>
+          <button class="filter is-active" role="tab" aria-selected="true" data-filter="all">
+            <i class="star" aria-hidden="true"></i><span data-i18n="cat.all">All</span>
+          </button>
+          <button class="filter" role="tab" aria-selected="false" data-filter="shoes">
+            <i class="star" aria-hidden="true"></i><span data-i18n="cat.shoes">Shoes</span>
+          </button>
+          <button class="filter" role="tab" aria-selected="false" data-filter="accessories">
+            <i class="star" aria-hidden="true"></i><span data-i18n="cat.accessories">Accessories</span>
+          </button>
+          <button class="filter" role="tab" aria-selected="false" data-filter="custom">
+            <i class="star" aria-hidden="true"></i><span data-i18n="cat.custom">Custom</span>
+          </button>
+          <span class="filter__count" id="count"></span>
+        </div>
+
+        <div class="grid" id="grid"></div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         3. CUSTOM ORDERS
+         ============================================================ -->
+    <section class="section section--alt" id="custom">
+      <div class="shell">
+
+        <div class="section-head" data-reveal>
+          <span class="eyebrow">
+            <i class="star" aria-hidden="true"></i>
+            <span data-i18n="custom.eyebrow">Commissions</span>
+          </span>
+          <h2 data-i18n="custom.title">Custom orders</h2>
+          <p data-i18n="custom.intro">Custom is not an add-on here — it is the whole point. Most of what leaves the workshop was drawn for one person.</p>
+        </div>
+
+        <ol class="steps" data-reveal>
+          <li class="step">
+            <span class="step__n" data-i18n="custom.step1.n">01</span>
+            <h3 class="step__t" data-i18n="custom.step1.t">Message</h3>
+            <p class="step__d" data-i18n="custom.step1.d">Send us a DM with a reference, a sketch, or just a description. Rough ideas are fine — that is where most pairs start.</p>
+          </li>
+          <li class="step">
+            <span class="step__n" data-i18n="custom.step2.n">02</span>
+            <h3 class="step__t" data-i18n="custom.step2.t">Design</h3>
+            <p class="step__d" data-i18n="custom.step2.d">We settle the shape, height, materials and hardware together, take your measurements, and confirm the price before anything begins.</p>
+          </li>
+          <li class="step">
+            <span class="step__n" data-i18n="custom.step3.n">03</span>
+            <h3 class="step__t" data-i18n="custom.step3.t">Made</h3>
+            <p class="step__d" data-i18n="custom.step3.d">Your pair is cut, lasted and finished by hand in the Tbilisi workshop. You get progress photos along the way.</p>
+          </li>
+          <li class="step">
+            <span class="step__n" data-i18n="custom.step4.n">04</span>
+            <h3 class="step__t" data-i18n="custom.step4.t">Shipped</h3>
+            <p class="step__d" data-i18n="custom.step4.d">Packed and sent with tracking, anywhere in the world. Delivery time depends on where you are.</p>
+          </li>
+        </ol>
+
+        <div class="turnaround" data-reveal>
+          <div>
+            <span class="turnaround__label" data-i18n="custom.turnaround.label">Typical turnaround</span>
+            <!-- PLACEHOLDER — set the real range in data/site.js -->
+            <span class="turnaround__value" id="turnaround">3–5 weeks</span>
+          </div>
+          <div>
+            <p class="turnaround__note" data-i18n="custom.turnaround.note">From confirmed design to shipped. Complex pieces take longer — we will tell you before you commit.</p>
+          </div>
+          <div>
+            <a class="btn btn--blood js-ig" href="#" target="_blank" rel="noopener"><span data-i18n="custom.cta">Start a commission</span></a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         4. ABOUT
+         ============================================================ -->
+    <section class="section" id="about">
+      <div class="shell about__grid">
+
+        <div class="about__body" data-reveal>
+          <span class="eyebrow">
+            <i class="star" aria-hidden="true"></i>
+            <span data-i18n="about.eyebrow">The workshop</span>
+          </span>
+          <h2 data-i18n="about.title">About</h2>
+          <p data-i18n="about.p1">ABDITORY is a small workshop in Tbilisi making gothic footwear and accessories to order. Nothing here is mass-produced. Every piece is built for one person — chosen height, chosen hardware, chosen finish — and made by hand, one at a time.</p>
+          <p data-i18n="about.p2">An abditory is a place where things are hidden. What we make is for people who would rather not blend in.</p>
+
+          <ul class="stats">
+            <li class="stat">
+              <span class="stat__n" data-i18n="about.stat1.n">Tbilisi</span>
+              <span class="stat__l" data-i18n="about.stat1.l">Where it is made</span>
+            </li>
+            <li class="stat">
+              <span class="stat__n" data-i18n="about.stat2.n">Worldwide</span>
+              <span class="stat__l" data-i18n="about.stat2.l">Where it goes</span>
+            </li>
+            <li class="stat">
+              <span class="stat__n" data-i18n="about.stat3.n">One by one</span>
+              <span class="stat__l" data-i18n="about.stat3.l">How it is made</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Workshop / portrait photo slot. Add images/about.jpg and
+             uncomment the img line to fill it. -->
+        <figure class="about__figure" id="aboutFigure" data-reveal>
+          <!-- <img src="images/about.jpg" alt="Inside the ABDITORY workshop in Tbilisi"> -->
+        </figure>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         5. CONTACT
+         ============================================================ -->
+    <section class="section section--alt contact" id="contact">
+      <div class="shell">
+
+        <div class="contact__inner" data-reveal>
+          <span class="eyebrow">
+            <i class="star" aria-hidden="true"></i>
+            <span data-i18n="contact.eyebrow">Get in touch</span>
+          </span>
+          <h2 class="contact__title" data-i18n="contact.title">Orders happen in the DMs</h2>
+          <p class="contact__sub" data-i18n="contact.sub">No checkout, no cart. Message us, tell us what you want, and we will take it from there.</p>
+          <a class="btn btn--blood js-ig" href="#" target="_blank" rel="noopener">
+            <span data-i18n="contact.cta">Message @abditorystars</span>
+          </a>
+        </div>
+
+        <ul class="info" data-reveal>
+          <li class="info__cell">
+            <span class="info__t"><i class="star" aria-hidden="true"></i><span data-i18n="contact.ship.t">Shipping</span></span>
+            <p class="info__d" data-i18n="contact.ship.d">We ship worldwide with tracking. Cost and delivery time depend on the destination — ask when you message and we will quote you.</p>
+          </li>
+          <li class="info__cell">
+            <span class="info__t"><i class="star" aria-hidden="true"></i><span data-i18n="contact.pay.t">Payment</span></span>
+            <p class="info__d" data-i18n="contact.pay.d">Payment is arranged directly by message once the design and price are confirmed.</p>
+          </li>
+          <li class="info__cell">
+            <span class="info__t"><i class="star" aria-hidden="true"></i><span data-i18n="contact.size.t">Sizing</span></span>
+            <p class="info__d" data-i18n="contact.size.d">Made-to-order means made to your measurements. We will walk you through how to measure — it takes two minutes and a piece of string.</p>
+          </li>
+        </ul>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="shell">
+
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a class="brand" href="#top">
+            <i class="star" aria-hidden="true"></i>
+            <span>Abditory</span>
+          </a>
+          <p class="footer__tag" data-i18n="footer.made">Custom-made in Tbilisi · Shipped worldwide</p>
+        </div>
+
+        <div class="footer__col">
+          <h4 data-i18n="footer.nav">Navigate</h4>
+          <ul>
+            <li><a href="#catalogue" data-i18n="nav.catalogue">Catalogue</a></li>
+            <li><a href="#custom" data-i18n="nav.custom">Custom orders</a></li>
+            <li><a href="#about" data-i18n="nav.about">About</a></li>
+            <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h4 data-i18n="footer.follow">Follow</h4>
+          <ul>
+            <li><a class="js-ig" href="#" target="_blank" rel="noopener">Instagram</a></li>
+            <li id="emailRow" hidden><a id="emailLink" href="#">email</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bar">
+        <span>© <span id="year">2026</span> Abditory — <span data-i18n="footer.rights">All rights reserved.</span></span>
+        <span id="footerFrom">Tbilisi, Georgia</span>
+      </div>
+
+    </div>
+  </footer>
+
+</div><!-- /.page -->
+
+<!-- ============================================================
+     QUICK VIEW PANEL — filled by app.js when a card is clicked
+     ============================================================ -->
+<div class="qv" id="qv" role="dialog" aria-modal="true" aria-labelledby="qvName" aria-hidden="true">
+  <div class="qv__scrim" data-close></div>
+  <div class="qv__panel">
+    <button class="qv__close" data-close aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+        <path d="M2 2l12 12M14 2L2 14"/>
+      </svg>
+    </button>
+    <div class="qv__grid">
+      <div class="qv__media">
+        <div class="qv__stage" id="qvStage"></div>
+        <div class="qv__thumbs" id="qvThumbs"></div>
+      </div>
+      <div class="qv__info">
+        <span class="qv__cat" id="qvCat"></span>
+        <h3 class="qv__name" id="qvName"></h3>
+        <span class="qv__price" id="qvPrice"></span>
+        <p class="qv__details" id="qvDetails"></p>
+        <div class="specs">
+          <span class="specs__title" data-i18n="product.specs">Details</span>
+          <ul id="qvSpecs"></ul>
+        </div>
+        <div class="qv__order">
+          <div class="qv__code">
+            <span data-i18n="product.code">Mention code</span>
+            <strong id="qvCode"></strong>
+          </div>
+          <a class="btn btn--blood btn--full js-ig" id="qvOrder" href="#" target="_blank" rel="noopener">
+            <span data-i18n="product.order">Order on Instagram</span>
+          </a>
+          <p class="qv__note" data-i18n="product.dmnote">Orders are taken by direct message. Send us the code above and your size.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="data/site.js"></script>
+<script src="data/products.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
