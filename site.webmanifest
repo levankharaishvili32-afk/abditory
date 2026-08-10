@@ -1,0 +1,14 @@
+{
+  "name": "ABDITORY",
+  "short_name": "ABDITORY",
+  "description": "Custom-made gothic footwear and accessories. Made by hand in Tbilisi, shipped worldwide.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#08080b",
+  "theme_color": "#08080b",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
