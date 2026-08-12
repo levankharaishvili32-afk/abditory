@@ -26,8 +26,13 @@ window.ABDITORY_SITE = {
   formEndpoint: "https://script.google.com/macros/s/AKfycbyPHfQIb0vdYu4sdUegj5O22fJnuPhySw0Z2gJ8sshVb6yLWhx7ocNTKcNQS4S0n1XFYQ/exec",
 
   // Currency shown next to any price you set in products.js.
-  // "₾" for lari, "€", "$", or write it out as "GEL" if you prefer.
-  currency: "₾",
+  // The catalogue is priced in EUR, so this is "€".
+  currency: "€",
+
+  /* Where the site lives. Used to build absolute URLs in the product
+     feed (image_link and link must be absolute, not relative).
+     Change this if you move to a custom domain. */
+  siteUrl: "https://levankharaishvili32-afk.github.io/abditory",
 
   // Shown in the Custom Orders section. PLACEHOLDER — set your real range.
   turnaround: "3–5 weeks",
@@ -92,6 +97,7 @@ window.ABDITORY_I18N = {
     "product.order": "Order on Instagram",
     "product.code": "Mention code",
     "product.specs": "Details",
+    "product.sku": "SKU",
     "product.dmnote": "Orders are taken by direct message. Send us the code above and your size.",
 
     "custom.eyebrow": "Commissions",
@@ -218,6 +224,7 @@ window.ABDITORY_I18N = {
     "product.order": "შეკვეთა Instagram-ით",
     "product.code": "მიუთითეთ კოდი",
     "product.specs": "დეტალები",
+    "product.sku": "SKU",
     "product.dmnote": "შეკვეთა მიიღება პირად შეტყობინებაში. მოგვწერეთ ზემოთ მითითებული კოდი და თქვენი ზომა.",
 
     "custom.eyebrow": "შეკვეთები",

@@ -16,6 +16,7 @@
    13. Contact & footer
    14. Motion & reveals
    15. Order / enquiry form
+   16. Catalogue marking (SKU)
    ===================================================================== */
 
 /* =====================================================================
@@ -1601,3 +1602,38 @@ select.field__input option { background: var(--ink-100); color: var(--text-100);
 /* The quick-view column is narrow — a two-up size select truncates its
    own placeholder, so give it the full width there. */
 .form--compact .field--size { grid-column: 1 / -1; }
+
+/* =====================================================================
+   16. CATALOGUE MARKING (SKU)
+   ---------------------------------------------------------------------
+   Sits directly under the photograph in the quick-view panel. Low
+   contrast and widely tracked so it reads as a stamped catalogue
+   reference rather than a label competing with the product name.
+   Tabular figures keep the digits aligned between products.
+   ===================================================================== */
+.qv__mark {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding-top: 0.75rem;
+  margin-top: 0.15rem;
+  border-top: 1px solid var(--line-soft);
+  font-size: var(--t-label);
+  text-transform: uppercase;
+}
+.qv__mark-label {
+  letter-spacing: 0.3em;
+  color: var(--text-400);
+}
+.qv__mark-value {
+  letter-spacing: 0.22em;
+  color: var(--star-300);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+/* Hidden entirely for the older products that have no SKU yet, rather
+   than showing an empty rule. */
+.qv__mark[hidden] { display: none; }
+
+/* A filter with nothing behind it is hidden rather than shown empty. */
+.filter[hidden] { display: none; }

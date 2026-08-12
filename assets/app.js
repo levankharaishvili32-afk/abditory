@@ -88,6 +88,21 @@
     );
   }
 
+  /* If a photograph 404s the browser draws a broken-image icon, which
+     looks worse than having no photo at all. Swap in the placeholder
+     slot instead so the layout survives a missing or expired file. */
+  function bindImageFallbacks(root) {
+    $$("img", root).forEach(function (img) {
+      img.addEventListener("error", function () {
+        var holder = img.closest(".card__media, .hero__figure, .qv__stage");
+        if (!holder || holder.querySelector(".slot")) { img.remove(); return; }
+        var code = holder.getAttribute("data-code") || "";
+        $$("img", holder).forEach(function (i) { i.remove(); });
+        holder.insertAdjacentHTML("afterbegin", slotMarkup(code));
+      }, { once: true });
+    });
+  }
+
   function priceLabel(p) {
     if (p.price === null || p.price === undefined || p.price === "") return t("product.price_request");
     return p.price + " " + (SITE.currency || "₾");
@@ -116,7 +131,7 @@
 
     return (
       '<button class="card" type="button" data-id="' + esc(p.id) + '" data-cat="' + esc(p.category) + '">' +
-        '<span class="card__media">' + tag + media +
+        '<span class="card__media" data-code="' + esc(p.id) + '">' + tag + media +
           '<span class="card__view">' + esc(t("product.view")) + "</span>" +
         "</span>" +
         '<span class="card__body">' +
@@ -145,12 +160,24 @@
     var count = $("#count");
     if (count) count.textContent = list.length + " " + t("cat.count");
 
+    bindImageFallbacks(grid);
     $$(".card", grid).forEach(function (card) {
       card.addEventListener("click", function () { openQuickView(card.dataset.id); });
     });
   }
 
+  /* A live shop should not offer a category with nothing in it. */
+  function syncFilterVisibility() {
+    $$(".filter").forEach(function (btn) {
+      var cat = btn.dataset.filter;
+      if (cat === "all") return;
+      var n = PRODUCTS.filter(function (p) { return p.category === cat; }).length;
+      btn.hidden = n === 0;
+    });
+  }
+
   function bindFilters() {
+    syncFilterVisibility();
     $$(".filter").forEach(function (btn) {
       btn.addEventListener("click", function () {
         activeFilter = btn.dataset.filter;
@@ -184,7 +211,9 @@
       ? '<img src="images/' + esc(feat.images[0]) + '" alt="' + esc(field(feat, "name")) + '" fetchpriority="high" decoding="async">'
       : slotMarkup(feat.id);
 
+    fig.setAttribute("data-code", feat.id);
     fig.insertAdjacentHTML("afterbegin", html);
+    bindImageFallbacks(fig);
   }
 
   function renderAboutFigure() {
@@ -213,6 +242,20 @@
     $("#qvDetails").textContent = field(p, "details");
     $("#qvCode").textContent = p.id;
 
+    /* Catalogue marking under the photo. Older products have no SKU —
+       hide the whole line rather than print an empty rule. */
+    var mark = $(".qv__mark");
+    var skuEl = $("#qvSku");
+    if (mark && skuEl) {
+      if (p.sku) {
+        skuEl.textContent = p.sku;
+        mark.hidden = false;
+      } else {
+        skuEl.textContent = "";
+        mark.hidden = true;
+      }
+    }
+
     $("#qvSpecs").innerHTML = (p.specs || []).map(function (s) {
       return "<li><i class='star'></i><span>" + esc(s) + "</span></li>";
     }).join("");
@@ -221,12 +264,23 @@
     var thumbs = $("#qvThumbs");
     var imgs = p.images || [];
 
+    stage.setAttribute("data-code", p.id);
     if (imgs.length) {
       stage.innerHTML = '<img src="images/' + esc(imgs[0]) + '" alt="' + esc(field(p, "name")) + '">';
-      thumbs.innerHTML = imgs.map(function (src, i) {
+      bindImageFallbacks(stage);
+      /* One photo needs no thumbnail strip — a single thumb under a single
+         image is just clutter. And a thumb whose file is missing removes
+         itself rather than showing a broken-image icon. */
+      thumbs.innerHTML = imgs.length < 2 ? "" : imgs.map(function (src, i) {
         return '<button class="qv__thumb' + (i === 0 ? " is-active" : "") + '" type="button" data-src="' + esc(src) + '">' +
                '<img src="images/' + esc(src) + '" alt=""></button>';
       }).join("");
+      $$("img", thumbs).forEach(function (im) {
+        im.addEventListener("error", function () {
+          var btn = im.closest(".qv__thumb");
+          if (btn) btn.remove();
+        }, { once: true });
+      });
       $$(".qv__thumb", thumbs).forEach(function (b) {
         b.addEventListener("click", function () {
           stage.innerHTML = '<img src="images/' + esc(b.dataset.src) + '" alt="">';

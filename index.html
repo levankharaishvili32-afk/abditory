@@ -35,8 +35,12 @@
      straight off the disk (file://). The fonts still load fine from
      fonts.css either way, and this keeps the console clean when you just
      double-click index.html. -->
-<link rel="stylesheet" href="assets/fonts.css">
-<link rel="stylesheet" href="assets/styles.css">
+<!-- The ?v= numbers are cache-busters. A browser that already has an old
+     copy of a file will happily keep using it; changing the number makes
+     the URL different, so it is forced to fetch the new one. If a change
+     of yours does not show up on the live site, bump every ?v=3 to ?v=4. -->
+<link rel="stylesheet" href="assets/fonts.css?v=3">
+<link rel="stylesheet" href="assets/styles.css?v=3">
 </head>
 
 <body>
@@ -405,6 +409,12 @@
     <div class="qv__grid">
       <div class="qv__media">
         <div class="qv__stage" id="qvStage"></div>
+        <!-- Catalogue marking under the photograph: the code the customer
+             quotes when they message us. Deliberately quiet. -->
+        <div class="qv__mark">
+          <span class="qv__mark-label" data-i18n="product.sku">SKU</span>
+          <span class="qv__mark-value" id="qvSku"></span>
+        </div>
         <div class="qv__thumbs" id="qvThumbs"></div>
       </div>
       <div class="qv__info">
@@ -436,9 +446,9 @@
   </div>
 </div>
 
-<script src="data/site.js"></script>
-<script src="data/products.js"></script>
-<script src="assets/form.js"></script>
-<script src="assets/app.js"></script>
+<script src="data/site.js?v=3"></script>
+<script src="data/products.js?v=3"></script>
+<script src="assets/form.js?v=3"></script>
+<script src="assets/app.js?v=3"></script>
 </body>
 </html>
