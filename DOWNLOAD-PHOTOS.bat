@@ -4,18 +4,16 @@ title ABDITORY - downloading product photos
 setlocal
 
 REM ==================================================================
-REM  Downloads the 9 product photos into images\products\
+REM  Downloads all product photos into images\products\
 REM
-REM  Uses curl.exe, which is built into Windows 10 and 11. No
-REM  PowerShell, no separate script file, no text-encoding traps -
-REM  that is what broke the two earlier versions of this.
-REM
-REM  Safe to run as many times as you like.
+REM  Uses curl.exe, built into Windows 10 and 11.
+REM  Safe to run again - it just overwrites with the same files.
+REM  Photos already downloaded are fetched again; that is harmless.
 REM ==================================================================
 
 echo.
 echo  ==========================================================
-echo    ABDITORY - product photos
+echo    ABDITORY - product photos  (19 files)
 echo  ==========================================================
 echo.
 
@@ -42,6 +40,16 @@ call :grab abd-006 "https://cdn.phototourl.com/free/2026-08-11-d1bcc6ad-8126-45d
 call :grab abd-007 "https://cdn.phototourl.com/free/2026-08-11-3365ad15-1f40-47a3-b0f5-650d221d51bc.jpg"
 call :grab abd-008 "https://cdn.phototourl.com/free/2026-08-11-9729bd88-9365-45d9-94f3-8e0316251b8f.jpg"
 call :grab abd-009 "https://cdn.phototourl.com/free/2026-08-11-c0482991-20d5-444f-9616-646c4b5c5119.jpg"
+call :grab abd-010 "https://cdn.phototourl.com/free/2026-08-14-6b5f4c38-df88-4ade-a10b-59eb9deef2a3.jpg"
+call :grab abd-011 "https://cdn.phototourl.com/free/2026-08-14-d580fd1f-8c3e-464c-b2fb-8bda33b55a8d.jpg"
+call :grab abd-012 "https://cdn.phototourl.com/free/2026-08-14-0dd67fc6-beb1-4eb3-ad93-a99c503bd4f1.jpg"
+call :grab abd-013 "https://cdn.phototourl.com/free/2026-08-14-78f95e4e-3994-4f00-b7d2-471dda0a3b37.jpg"
+call :grab abd-014 "https://cdn.phototourl.com/free/2026-08-14-09f699f6-2118-4e35-b12f-60b4ec36d4ba.jpg"
+call :grab abd-015 "https://cdn.phototourl.com/free/2026-08-14-d7bc4ba5-6c7c-4c9f-97bb-855e5a6cee2f.jpg"
+call :grab abd-016 "https://cdn.phototourl.com/free/2026-08-14-8dbe4a7e-0062-4383-b762-1594891dc318.jpg"
+call :grab abd-017 "https://cdn.phototourl.com/free/2026-08-14-8c61a9e4-1dc1-4bb5-8eb4-acc026c2ec8d.jpg"
+call :grab abd-018 "https://cdn.phototourl.com/free/2026-08-14-5a90f222-1763-4bbe-b56d-77eb0efa88dc.jpg"
+call :grab abd-019 "https://cdn.phototourl.com/free/2026-08-14-64be5d51-ff6a-4757-85e3-5321b9011bf2.jpg"
 
 echo.
 if "%FAILED%"=="" (
@@ -58,9 +66,8 @@ exit /b 0
 
 REM ------------------------------------------------------------------
 REM  :grab  <name>  <url>
-REM  -L    follow redirects
-REM  -f    treat an HTTP error page as a failure instead of saving it
-REM  -sS   quiet, but still print real errors
+REM  -L  follow redirects   -f  fail on an HTTP error page
+REM  -sS quiet but still report real errors
 REM ------------------------------------------------------------------
 :grab
 set "OUT=images\products\%~1.jpg"

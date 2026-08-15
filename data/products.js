@@ -247,6 +247,210 @@ window.ABDITORY_PRODUCTS = [
     productType: "Shoes > Platform Boots"
   },
 
+  /* ===================================================================
+     SECOND BATCH - from ABDITORY SHOES 1.xlsx, rows 10-19.
+     Numbering carries on from ABD-009; nothing above was renumbered.
+     =================================================================== */
+
+  {
+    id: "ABD-010",
+    sku: "ABD-SH-010",
+    category: "shoes",
+    name: "High-Rise Matte Leather Platform Boots",
+    name_ka: "",
+    blurb: "Mid-calf, 15cm dual-tier sole, side zips.",
+    blurb_ka: "",
+    details:
+      "Engineered for a commanding silhouette, these mid-calf boots blend bold architectural structure with clean, functional detailing. Crafted in a smooth matte black finish, the standout feature is a towering dual-tiered 15 cm continuous platform sole designed for maximum height and impact, finished with subtle base tread for added stability. The front lace-up closure is secured with polished silver-tone metal eyelets, perfectly complemented by fully functional exposed side zippers that allow for smooth, effortless wear. Featuring precise panel stitching and a defined mid-calf upper, this pair delivers an assertive, high-impact look without sacrificing structured support.",
+    details_ka: "",
+    specs: ["15cm dual-tier platform", "Silver-tone eyelets", "Working side zips", "Mid-calf shaft"],
+    price: 155,
+    images: ["products/abd-010.jpg"],
+    featured: false,
+    sold_out: false,
+    googleCategory: "Apparel & Accessories > Shoes",
+    productType: "Shoes > Platform Boots"
+  },
+
+  {
+    id: "ABD-011",
+    sku: "ABD-SH-011",
+    category: "shoes",
+    name: "Contrast Panel Buckled Platform Slides",
+    name_ka: "",
+    blurb: "Slip-on, two wide straps, 13cm wedge.",
+    blurb_ka: "",
+    details:
+      "Designed with a heavy-duty aesthetic, these slip-on platform slides merge utility hardware with a dynamic two-tone construction. The upper features dual wide faux-leather straps secured by substantial, polished metallic buckles with engraved detail work and heavy eyelet accents. Built on a sculpted 13 cm wedge-style platform, the sole showcases a striking interplay of dark grey canvas texturing set against structured black overlays, finished with a deeply grooved rubber outsole for reliable grip and an assertive profile.",
+    details_ka: "",
+    specs: ["13cm wedge platform", "Engraved metal buckles", "Two-tone canvas and black", "Grooved rubber outsole"],
+    price: 115,
+    images: ["products/abd-011.jpg"],
+    featured: false,
+    sold_out: false,
+    googleCategory: "Apparel & Accessories > Shoes",
+    productType: "Shoes > Platform Boots"
+  },
+
+  {
+    id: "ABD-012",
+    sku: "ABD-SH-012",
+    category: "shoes",
+    name: "Patent Grommet Buckled Platform Boots",
+    name_ka: "",
+    blurb: "Patent ankle boot, grommet straps, 11cm platform.",
+    blurb_ka: "",
+    details:
+      "Crafted with a high-shine vinyl sheen, these ankle-length boots make an uncompromising statement through high-contrast materials and bold hardware elements. The glossy patent upper is enveloped by thick dual straps lined with silver-tone metal grommets and anchored by substantial double-prong roller buckles. Anchoring the design is a stacked, two-tone continuous 11 cm platform that transitions from a textured matte mid-band to a sleek, polished patent base, delivering an ultra-modern edge alongside substantial lift.",
+    details_ka: "",
+    specs: ["11cm two-tone platform", "High-shine patent", "Metal grommet straps", "Double-prong roller buckles"],
+    price: 135,
+    images: ["products/abd-012.jpg"],
+    featured: false,
+    sold_out: false,
+    googleCategory: "Apparel & Accessories > Shoes",
+    productType: "Shoes > Platform Boots"
+  },
+
+  {
+    id: "ABD-013",
+    sku: "ABD-SH-013",
+    category: "shoes",
+    name: "Spiked Harness Star Platform Boots",
+    name_ka: "",
+    blurb: "Knee-high, star appliques, removable spiked harness.",
+    blurb_ka: "",
+    details:
+      "Combining extreme hardware with graphic detailing, these knee-high platform boots showcase a multi-textured construction with distinct alternative accents. The tall lace-up shaft is layered with skull-patterned side paneling and highlighted by silver contrast star appliqués extending across the upper and sole casing. Removable, trailing harness straps heavily studded with conical spikes wrap the calf and ankle, anchored by skull-embossed buckles. Resting on a massive, sculpted 13 cm wedge platform, this design offers maximum presence and high-impact structural detail.",
+    details_ka: "",
+    specs: ["13cm sculpted wedge", "Star appliques", "Removable spiked harness", "Skull-embossed buckles"],
+    price: 165,
+    images: ["products/abd-013.jpg"],
+    featured: false,
+    sold_out: false,
+    googleCategory: "Apparel & Accessories > Shoes",
+    productType: "Shoes > Platform Boots"
+  },
+
+  {
+    id: "ABD-014",
+    sku: "ABD-SH-014",
+    category: "shoes",
+    name: "Full-Spike Platform Mule Clogs",
+    name_ka: "",
+    blurb: "Backless clog, spikes over the whole upper and sole.",
+    blurb_ka: "",
+    details:
+      "Engineered for extreme visual impact, these backless platform clogs deliver an uncompromising, aggressive design. Crafted from smooth black synthetic leather, the entire upper and continuous 10 cm platform base are densely studded with metallic cone spikes for a 360-degree tactical look. Featuring an easy slip-on silhouette, a padded footbed, and a deep wedge elevation, this pair merges bold industrial hardware with effortless wearable design.",
+    details_ka: "",
+    specs: ["10cm continuous platform", "Spikes all round", "Padded footbed", "Slip-on"],
+    price: 120,
+    images: ["products/abd-014.jpg"],
+    featured: false,
+    sold_out: false,
+    googleCategory: "Apparel & Accessories > Shoes",
+    productType: "Shoes > Platform Boots"
+  },
+
+  {
+    id: "ABD-015",
+    sku: "ABD-SH-015",
+    category: "shoes",
+    name: "Spiked Faux-Fur Harness Platform Boots",
+    name_ka: "",
+    blurb: "Faux fur, spiked shaft straps, 10cm platform.",
+    blurb_ka: "",
+    details:
+      "Striking a balance between tactile texture and heavy metal accents, these mid-calf boots are fully enveloped in a plush, grey-and-white mottled faux fur. The soft exterior is dramatically contrasted by dual leather shaft straps heavily loaded with sharp metallic cone spikes and trailing studded belts secured with ornamental buckles. A matching studded leather harness wraps around the foot and elevated 10 cm platform base, which is also trimmed in faux fur for a cohesive, polar-industrial statement piece.",
+    details_ka: "",
+    specs: ["10cm platform", "Plush faux fur", "Spiked shaft straps", "Studded foot harness"],
+    price: 140,
+    images: ["products/abd-015.jpg"],
+    featured: false,
+    sold_out: false,
+    googleCategory: "Apparel & Accessories > Shoes",
+    productType: "Shoes > Platform Boots"
+  },
+
+  {
+    id: "ABD-016",
+    sku: "ABD-SH-016",
+    category: "shoes",
+    name: "Tactical Two-Tone Strapped Platform Sandals",
+    name_ka: "",
+    blurb: "Open toe, hook-and-loop straps, 13cm wedge.",
+    blurb_ka: "",
+    details:
+      "Blending utility-inspired design with a clean, high-contrast palette, these open-toe platform sandals feature a durable, multi-strap upper crafted with adjustable hook-and-loop fasteners for a customized fit. The upper is anchored by a high-rise, sculpted 13 cm wedge platform that showcases a distinct paneling of muted purple canvas texture set against solid black suede-like overlays. Finished with a comfortable slingback heel strap and a serrated rubber tread, this pair delivers an effortless, streetwear-ready profile with maximum structural height.",
+    details_ka: "",
+    specs: ["13cm wedge platform", "Hook-and-loop straps", "Slingback heel strap", "Serrated rubber tread"],
+    price: 130,
+    images: ["products/abd-016.jpg"],
+    featured: false,
+    sold_out: false,
+    googleCategory: "Apparel & Accessories > Shoes",
+    productType: "Shoes > Platform Boots"
+  },
+
+  {
+    id: "ABD-017",
+    sku: "ABD-SH-017",
+    category: "shoes",
+    name: "Hardware-Laden Embellished Platform Slides",
+    name_ka: "",
+    blurb: "Spikes, chain links, spade and spider charms.",
+    blurb_ka: "",
+    details:
+      "Defined by heavy metal hardware and gothic motifs, these open-toe platform slides deliver an intensely detailed, maximalist profile. The multi-strap upper combines conical spikes, metal track zips, curb-chain links, and polished silver studs alongside spade and spider charms. Wrapping around the continuous 10 cm wedge platform base is a harness-style leather band loaded with matching studs, skull buckles, and metallic appliqués, offering a bold 360-degree industrial look with high-impact elevation.",
+    details_ka: "",
+    specs: ["10cm wedge platform", "Spikes, chains and studs", "Spade and spider charms", "Skull buckles"],
+    price: 120,
+    images: ["products/abd-017.jpg"],
+    featured: false,
+    sold_out: false,
+    googleCategory: "Apparel & Accessories > Shoes",
+    productType: "Shoes > Platform Boots"
+  },
+
+  {
+    id: "ABD-018",
+    sku: "ABD-SH-018",
+    category: "shoes",
+    name: "Multi-Buckle Heavy Hardware Knee-High Boots",
+    name_ka: "",
+    blurb: "Four buckle straps, hex-nut studs, 10cm wedge.",
+    blurb_ka: "",
+    details:
+      "Constructed with an intense industrial aesthetic, these tall knee-high boots present a heavily structured silhouette wrapped in functional hardware. A full front lace-up closure is layered with four wide, eyelet-punched leather straps featuring rectangular metallic buckles, complimented by hex-nut stud embellishments along the upper collar and vamp. The continuous 10 cm platform wedge sole is encased in a removable buckle-harness trim adorned with oversized metallic grommets and rounded studs, delivering a formidable presence with complete structural impact.",
+    details_ka: "",
+    specs: ["10cm platform wedge", "Four eyelet-punched straps", "Hex-nut studs", "Removable buckle harness"],
+    price: 145,
+    images: ["products/abd-018.jpg"],
+    featured: false,
+    sold_out: false,
+    googleCategory: "Apparel & Accessories > Shoes",
+    productType: "Shoes > Platform Boots"
+  },
+
+  {
+    id: "ABD-019",
+    sku: "ABD-SH-019",
+    category: "shoes",
+    name: "Spiked Belt-Accented Platform Mules",
+    name_ka: "",
+    blurb: "Minimal strap, spikes and O-rings, 10cm wedge.",
+    blurb_ka: "",
+    details:
+      "Defined by a minimal upper paired with sharp metallic hardware, these open-toe slide mules feature a padded black synthetic strap topped with a belted harness overlay. The decorative strap is studded with sharp conical spikes, metallic O-rings, and a polished silver buckle, creating an aggressive focal point against a clean silhouette. Set atop a smooth, seamless 10 cm wedge platform, this design combines easy slip-on convenience with a bold, dark aesthetic.",
+    details_ka: "",
+    specs: ["10cm wedge platform", "Conical spikes and O-rings", "Padded strap", "Slip-on"],
+    price: 110,
+    images: ["products/abd-019.jpg"],
+    featured: false,
+    sold_out: false,
+    googleCategory: "Apparel & Accessories > Shoes",
+    productType: "Shoes > Platform Boots"
+  },
 
   /* ===================================================================
      EARLIER PRODUCTS — the six photographs you sent before the
@@ -306,7 +510,7 @@ window.ABDITORY_PRODUCTS = [
     specs: ["~10cm tank sole", "Patent finish", "Flame overlay", "Studded platform rim"],
     price: null,
     images: ["flame-platform-1.jpg"],
-    featured: true,
+    featured: false,
     sold_out: false
   },
 
