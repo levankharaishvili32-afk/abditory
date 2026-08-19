@@ -224,9 +224,135 @@
   }
 
   /* ===================================================================
-     A3 — PHOTO ZOOM
+     DETAIL ZOOM — "inspect the hardware"
+
+     Two different jobs for two different devices:
+
+       fine pointer  a magnifier lens that follows the cursor over the
+                     quick-view photo at 2.5x, so you can read a buckle
+                     without leaving the page
+       touch         a full-screen viewer with native pinch, double-tap
+                     to 2x, and swipe down to dismiss
+
+     Both read from whichever image the thumbnail strip has loaded into
+     the stage, so switching to the spikes shot and then magnifying
+     works with no extra wiring.
      =================================================================== */
   var zoom = null, zoomImg = null, lastFocus = null;
+
+  var LENS_POWER = 2.5;
+  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+  /* --- the desktop lens ---------------------------------------------- */
+  function armLens(stage) {
+    var lens = null, img = null, size = 0;
+
+    /* The stage's innerHTML is replaced whenever a different product or a
+       different thumbnail is loaded, which detaches the lens with it. So
+       check that it is still in the document, not merely that we once
+       made one. */
+    function ensure() {
+      if (lens && lens.isConnected) return lens;
+      lens = document.createElement("div");
+      lens.className = "lens";
+      lens.setAttribute("aria-hidden", "true");
+      stage.appendChild(lens);
+      size = lens.offsetWidth || 190;
+      return lens;
+    }
+
+    function place(e) {
+      if (!lens || !lens.isConnected || !img || !img.isConnected) return;
+      var r = stage.getBoundingClientRect();
+      var x = e.clientX - r.left;
+      var y = e.clientY - r.top;
+      lens.style.left = x + "px";
+      lens.style.top = y + "px";
+      /* .qv__stage img is object-fit: cover and fills the box exactly, so
+         scaling the stage's own dimensions gives a true 2.5x with no
+         separate measurement of the intrinsic image size. */
+      lens.style.backgroundSize =
+        (r.width * LENS_POWER) + "px " + (r.height * LENS_POWER) + "px";
+      lens.style.backgroundPosition =
+        (size / 2 - x * LENS_POWER) + "px " + (size / 2 - y * LENS_POWER) + "px";
+    }
+
+    stage.addEventListener("mouseenter", function (e) {
+      if (!finePointer.matches) return;
+      img = $("img", stage);
+      var src = img && (img.currentSrc || img.src);
+      if (!src) return;
+      var l = ensure();
+      l.style.backgroundImage = 'url("' + src + '")';
+      l.classList.add("is-on");
+      place(e);
+    });
+
+    stage.addEventListener("mousemove", place);
+
+    stage.addEventListener("mouseleave", function () {
+      if (lens) lens.classList.remove("is-on");
+    });
+  }
+
+  /* --- the full-screen viewer ----------------------------------------- */
+  function toggle2x(originX, originY) {
+    var on = zoomImg.classList.toggle("is-2x");
+    if (on && originX != null) {
+      var r = zoomImg.getBoundingClientRect();
+      zoomImg.style.transformOrigin =
+        (((originX - r.left) / r.width) * 100).toFixed(1) + "% " +
+        (((originY - r.top) / r.height) * 100).toFixed(1) + "%";
+    } else if (!on) {
+      zoomImg.style.transformOrigin = "";
+    }
+    return on;
+  }
+
+  /* Swipe down to dismiss, double-tap to magnify. Both are skipped while
+     the photo is enlarged, where the same gestures mean "pan" instead. */
+  function armGestures(stage) {
+    var sy = 0, sx = 0, drag = 0, tracking = false, lastTap = 0;
+
+    stage.addEventListener("touchstart", function (e) {
+      tracking = e.touches.length === 1;
+      if (!tracking) return;
+      sy = e.touches[0].clientY;
+      sx = e.touches[0].clientX;
+      drag = 0;
+    }, { passive: true });
+
+    stage.addEventListener("touchmove", function (e) {
+      if (!tracking || e.touches.length !== 1) { tracking = false; return; }
+      if (zoomImg.classList.contains("is-2x")) return;
+      var dy = e.touches[0].clientY - sy;
+      var dx = e.touches[0].clientX - sx;
+      if (dy <= 0 || Math.abs(dx) > Math.abs(dy)) return;
+      drag = Math.min(dy, 300);
+      zoom.style.setProperty("--drag", drag + "px");
+      zoom.classList.add("is-dragging");
+    }, { passive: true });
+
+    stage.addEventListener("touchend", function (e) {
+      zoom.classList.remove("is-dragging");
+      zoom.style.removeProperty("--drag");
+
+      if (tracking && drag > 90) { closeZoom(); tracking = false; drag = 0; return; }
+
+      if (tracking && drag < 10) {
+        var gap = e.timeStamp - lastTap;
+        if (gap > 0 && gap < 320) {
+          var tp = e.changedTouches[0];
+          toggle2x(tp.clientX, tp.clientY);
+          lastTap = 0;
+        } else {
+          lastTap = e.timeStamp;
+        }
+      }
+      tracking = false;
+      drag = 0;
+    });
+  }
 
   function buildZoom() {
     if (zoom) return;
@@ -241,30 +367,31 @@
         '<path d="M2 2l12 12M14 2L2 14"/></svg>' +
       "</button>" +
       '<div class="zoom__stage"><img alt=""></div>' +
-      '<p class="zoom__hint">' + esc(t("zoom.hint")) + "</p>";
+      '<p class="zoom__hint">' +
+        esc(finePointer.matches ? t("zoom.hint") : t("zoom.hint.touch")) +
+      "</p>";
     document.body.appendChild(zoom);
     zoomImg = $("img", zoom);
+    var stage = $(".zoom__stage", zoom);
 
     $(".zoom__close", zoom).addEventListener("click", closeZoom);
     zoom.addEventListener("click", function (e) {
-      if (e.target === zoom || e.target.classList.contains("zoom__stage")) closeZoom();
+      if (e.target === zoom || e.target === stage) closeZoom();
     });
-    /* Mouse: click the photo to toggle 2x, anchored where you clicked.
-       Touch devices get native pinch instead — see .zoom__stage in CSS. */
     zoomImg.addEventListener("click", function (e) {
       e.stopPropagation();
-      var on = zoomImg.classList.toggle("is-2x");
-      if (on) {
-        var r = zoomImg.getBoundingClientRect();
-        zoomImg.style.transformOrigin =
-          (((e.clientX - r.left) / r.width) * 100).toFixed(1) + "% " +
-          (((e.clientY - r.top) / r.height) * 100).toFixed(1) + "%";
-      } else {
-        zoomImg.style.transformOrigin = "";
-      }
+      /* A tap on a touch screen also fires click; the double-tap handler
+         owns that case, so only act on a real mouse. */
+      if (!finePointer.matches) return;
+      toggle2x(e.clientX, e.clientY);
     });
+    armGestures(stage);
+
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && zoom.classList.contains("is-open")) closeZoom();
+      if (!zoom.classList.contains("is-open")) return;
+      if (e.key === "Escape") closeZoom();
+      /* Keep Tab inside the dialog — the close button is the only stop. */
+      if (e.key === "Tab") { e.preventDefault(); $(".zoom__close", zoom).focus(); }
     });
   }
 
@@ -300,19 +427,20 @@
     stage.classList.add("is-zoomable");
     stage.addEventListener("click", function (e) {
       var img = e.target.closest ? e.target.closest("img") : null;
-      if (img) openZoom(img.src, img.alt);
+      if (img) openZoom(img.currentSrc || img.src, img.alt);
     });
     /* Keyboard: the stage itself is focusable and opens on Enter/Space. */
     stage.setAttribute("tabindex", "0");
     stage.setAttribute("role", "button");
-    stage.setAttribute("aria-label", t("zoom.hint"));
+    stage.setAttribute("aria-label", t("zoom.open"));
     stage.addEventListener("keydown", function (e) {
       if (e.key !== "Enter" && e.key !== " ") return;
       var img = $("img", stage);
       if (!img) return;
       e.preventDefault();
-      openZoom(img.src, img.alt);
+      openZoom(img.currentSrc || img.src, img.alt);
     });
+    armLens(stage);
   }
 
   /* ===================================================================

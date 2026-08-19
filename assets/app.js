@@ -278,8 +278,10 @@
          image is just clutter. And a thumb whose file is missing removes
          itself rather than showing a broken-image icon. */
       thumbs.innerHTML = imgs.length < 2 ? "" : imgs.map(function (src, i) {
-        return '<button class="qv__thumb' + (i === 0 ? " is-active" : "") + '" type="button" data-src="' + esc(src) + '">' +
-               '<img src="images/' + esc(src) + '" alt=""></button>';
+        return '<button class="qv__thumb' + (i === 0 ? " is-active" : "") + '" type="button"' +
+               ' aria-pressed="' + (i === 0 ? "true" : "false") + '"' +
+               ' data-src="' + esc(src) + '">' +
+               '<img src="images/' + esc(src) + '" alt="" loading="lazy"></button>';
       }).join("");
       $$("img", thumbs).forEach(function (im) {
         im.addEventListener("error", function () {
@@ -289,9 +291,18 @@
       });
       $$(".qv__thumb", thumbs).forEach(function (b) {
         b.addEventListener("click", function () {
-          stage.innerHTML = '<img src="images/' + esc(b.dataset.src) + '" alt="">';
-          $$(".qv__thumb", thumbs).forEach(function (x) { x.classList.remove("is-active"); });
+          /* Keep the alt text and the missing-file fallback when the
+             detail shot replaces the main one — the magnifier and the
+             full-screen viewer both read from this same element. */
+          stage.innerHTML = '<img src="images/' + esc(b.dataset.src) +
+                            '" alt="' + esc(field(p, "name")) + '">';
+          bindImageFallbacks(stage);
+          $$(".qv__thumb", thumbs).forEach(function (x) {
+            x.classList.remove("is-active");
+            x.setAttribute("aria-pressed", "false");
+          });
           b.classList.add("is-active");
+          b.setAttribute("aria-pressed", "true");
         });
       });
     } else {

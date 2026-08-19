@@ -1765,14 +1765,15 @@ select.field__input option { background: var(--ink-100); color: var(--text-100);
 }
 .zoom.is-open { opacity: 1; visibility: visible; }
 
-/* touch-action lets the browser do the pinch itself — smoother and
-   cheaper than any JS gesture handling, and it is what phone users
-   already expect. */
+/* touch-action lets the browser do the pinch and the pan itself — smoother
+   and cheaper than any JS gesture handling, and it is what phone users
+   already expect. Double-tap-to-zoom is excluded so our own double-tap
+   handler is the only thing listening for it. */
 .zoom__stage {
   max-width: 100%;
   max-height: 100%;
   overflow: auto;
-  touch-action: pinch-zoom;
+  touch-action: pan-x pan-y pinch-zoom;
   scrollbar-width: none;
 }
 .zoom__stage::-webkit-scrollbar { display: none; }
@@ -1786,6 +1787,46 @@ select.field__input option { background: var(--ink-100); color: var(--text-100);
   transform-origin: center;
 }
 .zoom img.is-2x { transform: scale(2); cursor: zoom-out; }
+
+/* Swipe down to dismiss: the whole overlay follows the finger and fades,
+   so the gesture feels answered before it completes. No transition while
+   dragging — the finger is the clock. */
+.zoom.is-dragging { transition: none; }
+.zoom.is-dragging .zoom__stage {
+  transform: translateY(var(--drag, 0px)) scale(calc(1 - var(--drag, 0px) / 2400));
+  transition: none;
+}
+.zoom.is-dragging .zoom__close,
+.zoom.is-dragging .zoom__hint { opacity: 0.25; }
+.zoom__stage { transition: transform 0.32s var(--ease); }
+
+/* The desktop magnifier. A dark disc with a hairline silver ring, holding
+   a 2.5x crop of whichever photo the stage is currently showing. */
+.lens {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.85);
+  border: 1px solid var(--star-200);
+  box-shadow:
+    0 0 0 1px rgba(8, 8, 11, 0.9),
+    0 18px 44px rgba(0, 0, 0, 0.55);
+  background-color: var(--ink-000);
+  background-repeat: no-repeat;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.22s var(--ease), transform 0.22s var(--ease), visibility 0.22s;
+  z-index: 3;
+}
+.lens.is-on { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+
+/* Touch has no hover, so the lens must never appear there — and a coarse
+   pointer would cover the very detail it is meant to reveal. */
+@media (hover: none), (pointer: coarse) {
+  .lens { display: none; }
+}
 
 .zoom__close {
   position: absolute;
@@ -1826,4 +1867,9 @@ select.field__input option { background: var(--ink-100); color: var(--text-100);
   }
   .card:active .card__media { transform: none; }
   .zoom img { transition: none; }
+  /* The lens still appears — it is a magnifier, not decoration — but it
+     stops sliding and scaling into place. */
+  .lens { transition: opacity 0.01ms; transform: translate(-50%, -50%); }
+  .lens.is-on { transform: translate(-50%, -50%); }
+  .zoom__stage { transition: none; }
 }

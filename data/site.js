@@ -102,7 +102,9 @@ window.ABDITORY_I18N = {
     "filter.hardware": "Hardware",
     "filter.clear": "Clear filters",
     "zoom.close": "Close",
-    "zoom.hint": "Pinch or click to zoom",
+    "zoom.hint": "Move to magnify \u2014 click to enlarge",
+    "zoom.hint.touch": "Double-tap to zoom \u00b7 swipe down to close",
+    "zoom.open": "Enlarge photo",
     "product.dmnote": "Orders are taken by direct message. Send us the code above and your size.",
 
     "custom.eyebrow": "Commissions",
@@ -234,7 +236,9 @@ window.ABDITORY_I18N = {
     "filter.hardware": "ფურნიტურა",
     "filter.clear": "ფილტრების გასუფთავება",
     "zoom.close": "დახურვა",
-    "zoom.hint": "გასადიდებლად შეეხეთ ან დააწკაპუნეთ",
+    "zoom.hint": "გაატარეთ გასადიდებლად \u2014 დააწკაპუნეთ გასაშლელად",
+    "zoom.hint.touch": "ორჯერ შეეხეთ გასადიდებლად \u00b7 ჩამოსწიეთ დასახურად",
+    "zoom.open": "ფოტოს გადიდება",
     "product.dmnote": "შეკვეთა მიიღება პირად შეტყობინებაში. მოგვწერეთ ზემოთ მითითებული კოდი და თქვენი ზომა.",
 
     "custom.eyebrow": "შეკვეთები",
