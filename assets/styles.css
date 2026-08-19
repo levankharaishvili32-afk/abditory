@@ -17,6 +17,7 @@
    14. Motion & reveals
    15. Order / enquiry form
    16. Catalogue marking (SKU)
+   17. Interactive layer (facets, reveal, zoom)
    ===================================================================== */
 
 /* =====================================================================
@@ -1637,3 +1638,192 @@ select.field__input option { background: var(--ink-100); color: var(--text-100);
 
 /* A filter with nothing behind it is hidden rather than shown empty. */
 .filter[hidden] { display: none; }
+
+/* =====================================================================
+   17. INTERACTIVE LAYER
+   ---------------------------------------------------------------------
+   Facet filters, staggered card reveal, press feedback and photo zoom.
+   Built entirely from the section 1 tokens — no new colours, fonts or
+   easings were introduced.
+   ===================================================================== */
+
+/* --- A1: facet filters ------------------------------------------------ */
+.facets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: clamp(1.5rem, 4vw, 2.25rem);
+  padding-bottom: clamp(1.25rem, 3vw, 1.75rem);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.facets__row { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.facets__legend {
+  font-size: var(--t-label);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-400);
+}
+
+/* Horizontal scroll on phones rather than wrapping to four rows.
+   The scrollbar is hidden but the strip stays swipeable and the chips
+   keep a full 44px+ touch target. */
+.facets__chips {
+  display: flex;
+  gap: 0.45rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.15rem;
+  scroll-snap-type: x proximity;
+}
+.facets__chips::-webkit-scrollbar { display: none; }
+
+.facet {
+  flex: none;
+  scroll-snap-align: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 0.95rem;
+  min-height: 44px;
+  border: 1px solid var(--line-soft);
+  background: transparent;
+  color: var(--text-300);
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: color 0.35s var(--ease), border-color 0.35s var(--ease),
+              background 0.35s var(--ease);
+}
+.facet:hover { color: var(--text-100); border-color: var(--line-mid); }
+
+.facet__n {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-400);
+  transition: color 0.35s var(--ease);
+}
+
+/* Selected state uses oxblood rather than the silver of the category
+   filters above, so the two rows never read as the same control. */
+.facet.is-on {
+  color: var(--star-100);
+  border-color: var(--blood-200);
+  background: var(--blood-300);
+}
+.facet.is-on .facet__n { color: var(--star-300); }
+
+.facets__clear {
+  align-self: flex-start;
+  font-size: var(--t-label);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-400);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.facets__clear:hover { color: var(--star-200); border-bottom-color: var(--line-mid); }
+.facets__clear[hidden] { display: none; }
+
+/* --- B1: staggered reveal + press feedback ---------------------------- */
+.card {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transition-delay: calc(var(--i, 0) * 55ms);
+}
+.card.is-in { opacity: 1; transform: none; }
+
+/* Touch has no hover, so a press needs its own confirmation. Kept small
+   and fast — this should feel like the card takes the weight, not like
+   an animation. */
+.card:active .card__media {
+  transform: scale(0.985);
+  transition-duration: 0.12s;
+}
+.card__media { transition: transform 0.35s var(--ease); }
+
+/* --- A3: photo zoom --------------------------------------------------- */
+.qv__stage.is-zoomable { cursor: zoom-in; }
+.qv__stage.is-zoomable:focus-visible { outline: 1px solid var(--star-200); outline-offset: 4px; }
+
+.zoom {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.75rem, 4vw, 3rem);
+  background: rgba(4, 4, 6, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s var(--ease), visibility 0.35s;
+}
+.zoom.is-open { opacity: 1; visibility: visible; }
+
+/* touch-action lets the browser do the pinch itself — smoother and
+   cheaper than any JS gesture handling, and it is what phone users
+   already expect. */
+.zoom__stage {
+  max-width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  touch-action: pinch-zoom;
+  scrollbar-width: none;
+}
+.zoom__stage::-webkit-scrollbar { display: none; }
+
+.zoom img {
+  max-width: 100%;
+  max-height: 86svh;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.4s var(--ease);
+  transform-origin: center;
+}
+.zoom img.is-2x { transform: scale(2); cursor: zoom-out; }
+
+.zoom__close {
+  position: absolute;
+  top: clamp(0.75rem, 3vw, 1.5rem);
+  right: clamp(0.75rem, 3vw, 1.5rem);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-content: center;
+  border: 1px solid var(--line-mid);
+  color: var(--text-200);
+  background: rgba(8, 8, 11, 0.6);
+  transition: border-color 0.35s var(--ease), color 0.35s var(--ease);
+}
+.zoom__close:hover { border-color: var(--blood-100); color: var(--star-100); }
+
+.zoom__hint {
+  position: absolute;
+  bottom: clamp(0.75rem, 3vw, 1.75rem);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--t-label);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-400);
+  pointer-events: none;
+  width: max-content;
+  max-width: 88vw;
+  text-align: center;
+}
+
+/* --- reduced motion --------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0ms;
+  }
+  .card:active .card__media { transform: none; }
+  .zoom img { transition: none; }
+}

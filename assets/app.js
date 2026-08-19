@@ -13,6 +13,11 @@
   var lang = "en";
   var activeFilter = "all";
 
+  /* Optional extra filter installed by assets/interactive.js. Null when
+     nothing is selected, so the catalogue behaves exactly as before if
+     that file is missing or fails. */
+  var extraFilter = null;
+
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -148,7 +153,8 @@
     if (!grid) return;
 
     var list = PRODUCTS.filter(function (p) {
-      return activeFilter === "all" || p.category === activeFilter;
+      if (activeFilter !== "all" && p.category !== activeFilter) return false;
+      return !extraFilter || extraFilter(p);
     });
 
     if (!list.length) {
@@ -509,6 +515,12 @@
     openFromHash();
     window.addEventListener("hashchange", openFromHash);
   }
+
+  /* Used by assets/interactive.js. Kept deliberately small: set a
+     predicate (or null) and the grid re-renders. */
+  window.ABDITORY_FILTER = {
+    set: function (fn) { extraFilter = fn || null; renderGrid(); }
+  };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);

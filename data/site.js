@@ -98,6 +98,11 @@ window.ABDITORY_I18N = {
     "product.code": "Mention code",
     "product.specs": "Details",
     "product.sku": "SKU",
+    "filter.height": "Platform height",
+    "filter.hardware": "Hardware",
+    "filter.clear": "Clear filters",
+    "zoom.close": "Close",
+    "zoom.hint": "Pinch or click to zoom",
     "product.dmnote": "Orders are taken by direct message. Send us the code above and your size.",
 
     "custom.eyebrow": "Commissions",
@@ -225,6 +230,11 @@ window.ABDITORY_I18N = {
     "product.code": "მიუთითეთ კოდი",
     "product.specs": "დეტალები",
     "product.sku": "SKU",
+    "filter.height": "პლატფორმის სიმაღლე",
+    "filter.hardware": "ფურნიტურა",
+    "filter.clear": "ფილტრების გასუფთავება",
+    "zoom.close": "დახურვა",
+    "zoom.hint": "გასადიდებლად შეეხეთ ან დააწკაპუნეთ",
     "product.dmnote": "შეკვეთა მიიღება პირად შეტყობინებაში. მოგვწერეთ ზემოთ მითითებული კოდი და თქვენი ზომა.",
 
     "custom.eyebrow": "შეკვეთები",
