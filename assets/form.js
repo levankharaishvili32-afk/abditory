@@ -81,7 +81,15 @@
      =================================================================== */
   function template(opts) {
     var isProduct = opts.context === "product";
-    var productName = opts.product ? (lang() === "ka" && opts.product.name_ka ? opts.product.name_ka : opts.product.name) : "";
+    /* Show the shopper the name in their own language — name_de, name_es,
+       name_ka — and fall back to the English when a locale has not been
+       translated. NOTE: what gets SUBMITTED further down stays the English
+       name plus the id, so every order that lands in the inbox reads the
+       same way whichever language it was placed in. */
+    var productName = "";
+    if (opts.product) {
+      productName = opts.product["name_" + lang()] || opts.product.name;
+    }
     var isShoes = opts.product && opts.product.category === "shoes";
 
     var typeField = isProduct

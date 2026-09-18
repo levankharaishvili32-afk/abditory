@@ -10,13 +10,67 @@
   var PRODUCTS = window.ABDITORY_PRODUCTS || [];
   var I18N = window.ABDITORY_I18N || { en: {} };
 
-  var lang = "en";
+  /* ---------------------------------------------------------------
+     LOCALES
+     English is the source of truth and the fallback for everything.
+     Georgian stays out of the picker until site.js turns it on — the
+     wording is a first pass that has not been reviewed yet.
+     --------------------------------------------------------------- */
+  var LOCALES = [
+    { code: "en", label: "EN", name: "English" },
+    { code: "de", label: "DE", name: "Deutsch" },
+    { code: "es", label: "ES", name: "Español" },
+    { code: "ka", label: "ქარ", name: "ქართული", gated: true }
+  ];
+  var FALLBACK = "en";
+  var STORE_KEY = "abditory.lang";
+
+  function localeAvailable(code) {
+    var def = null;
+    for (var i = 0; i < LOCALES.length; i++) {
+      if (LOCALES[i].code === code) { def = LOCALES[i]; break; }
+    }
+    if (!def) return false;
+    if (def.gated && !SITE.georgianEnabled) return false;
+    return !!(I18N[code]);          // a locale with no dictionary is not offered
+  }
+
+  /* Remember the choice per visitor. Storage throws in some privacy
+     modes, so every touch is wrapped — the site must work without it. */
+  function storedLang() {
+    try {
+      var v = window.localStorage.getItem(STORE_KEY);
+      return localeAvailable(v) ? v : null;
+    } catch (e) { return null; }
+  }
+
+  function rememberLang(code) {
+    try { window.localStorage.setItem(STORE_KEY, code); } catch (e) {}
+  }
+
+  /* First visit: take the browser's preference if we speak it. navigator
+     gives things like "de-AT" or "es-419", so match on the base tag. */
+  function browserLang() {
+    var list = navigator.languages || [navigator.language || ""];
+    for (var i = 0; i < list.length; i++) {
+      var base = String(list[i]).toLowerCase().split("-")[0];
+      if (base !== FALLBACK && localeAvailable(base)) return base;
+    }
+    return null;
+  }
+
+  var lang = storedLang() || browserLang() || FALLBACK;
   var activeFilter = "all";
 
   /* Optional extra filter installed by assets/interactive.js. Null when
      nothing is selected, so the catalogue behaves exactly as before if
      that file is missing or fails. */
   var extraFilter = null;
+
+  /* Which product the quick-view panel is showing, so switching language
+     while it is open rebuilds it in the new language instead of leaving a
+     panel of stale text — including the order form mounted inside it. */
+  var openProductId = null;
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -27,11 +81,18 @@
     return (dict && dict[key]) || (I18N.en && I18N.en[key]) || "";
   }
 
-  /* Pick the right language field off a product, falling back to English
-     when the Georgian version has not been filled in yet. */
+  /* Pick the right language field off a product. Product copy lives in
+     products.js as name_de / blurb_es / specs_ka and so on, so any locale
+     resolves the same way — and anything not yet translated quietly falls
+     back to the English rather than rendering blank. Works for the specs
+     array as well as the string fields. */
   function field(product, key) {
-    if (lang === "ka" && product[key + "_ka"]) return product[key + "_ka"];
-    return product[key] || "";
+    if (lang !== FALLBACK) {
+      var v = product[key + "_" + lang];
+      if (Array.isArray(v) ? v.length : v) return v;
+    }
+    var base = product[key];
+    return (Array.isArray(base) ? base : base || "");
   }
 
   function esc(str) {
@@ -251,11 +312,12 @@
   var qv = $("#qv");
   var lastFocus = null;
 
-  function openQuickView(id) {
+  function openQuickView(id, keepFocus) {
     var p = PRODUCTS.filter(function (x) { return x.id === id; })[0];
     if (!p || !qv) return;
 
-    lastFocus = document.activeElement;
+    openProductId = id;
+    if (!keepFocus) lastFocus = document.activeElement;
 
     $("#qvCat").textContent = t("cat." + p.category);
     $("#qvName").textContent = field(p, "name");
@@ -277,7 +339,7 @@
       }
     }
 
-    $("#qvSpecs").innerHTML = (p.specs || []).map(function (s) {
+    $("#qvSpecs").innerHTML = (field(p, "specs") || []).map(function (s) {
       return "<li><i class='star'></i><span>" + esc(s) + "</span></li>";
     }).join("");
 
@@ -354,11 +416,12 @@
     qv.classList.add("is-open");
     qv.setAttribute("aria-hidden", "false");
     document.body.classList.add("is-locked");
-    $(".qv__close").focus();
+    if (!keepFocus) $(".qv__close").focus();
   }
 
   function closeQuickView() {
     if (!qv) return;
+    openProductId = null;
     qv.classList.remove("is-open");
     qv.setAttribute("aria-hidden", "true");
     document.body.classList.remove("is-locked");
@@ -459,7 +522,9 @@
     if (ig) ig.textContent = handle;
 
     var ta = $("#turnaround");
-    if (ta) ta.textContent = (lang === "ka" && SITE.turnaround_ka) ? SITE.turnaround_ka : (SITE.turnaround || "");
+    /* turnaround_de / turnaround_es / turnaround_ka on ABDITORY_SITE,
+       English whenever the current locale has not supplied one. */
+    if (ta) ta.textContent = SITE["turnaround_" + lang] || SITE.turnaround || "";
 
     var from = $("#footerFrom");
     if (from && SITE.shipsFrom) from.textContent = SITE.shipsFrom;
@@ -493,6 +558,7 @@
     renderGrid();
     mountOrderForm();
     applySite();
+    if (openProductId) openQuickView(openProductId, true);
   }
 
   /* ===================================================================
@@ -506,19 +572,39 @@
     bindReveals();
   }
 
+  /* The picker is built from LOCALES rather than written into the HTML,
+     so adding a language means adding a dictionary and one line up top —
+     the markup never has to be touched again. */
   function bindLang() {
     var box = $("#lang");
     if (!box) return;
-    if (SITE.georgianEnabled) box.classList.add("is-on");
 
-    $$("button", box).forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        lang = btn.dataset.lang;
-        $$("button", box).forEach(function (b) {
-          b.classList.toggle("is-active", b === btn);
-        });
-        applyLang();
+    var offered = LOCALES.filter(function (l) { return localeAvailable(l.code); });
+    if (offered.length < 2) return;      // nothing to choose between
+
+    box.innerHTML = offered.map(function (l, i) {
+      return (i ? '<span class="lang__sep" aria-hidden="true">/</span>' : "") +
+             '<button type="button" data-lang="' + l.code + '"' +
+             ' lang="' + l.code + '"' +
+             ' title="' + esc(l.name) + '"' +
+             ' aria-label="' + esc(l.name) + '"' +
+             (l.code === lang ? ' class="is-active" aria-current="true"' : "") +
+             ">" + esc(l.label) + "</button>";
+    }).join("");
+    box.classList.add("is-on");
+
+    box.addEventListener("click", function (e) {
+      var btn = e.target.closest ? e.target.closest("button[data-lang]") : null;
+      if (!btn || btn.dataset.lang === lang) return;
+      lang = btn.dataset.lang;
+      rememberLang(lang);
+      $$("button", box).forEach(function (b) {
+        var on = b === btn;
+        b.classList.toggle("is-active", on);
+        if (on) { b.setAttribute("aria-current", "true"); }
+        else { b.removeAttribute("aria-current"); }
       });
+      applyLang();
     });
   }
 
@@ -538,6 +624,11 @@
     bindReveals();
     bindLang();
     applySite();
+    /* A returning visitor, or a first-time one whose browser asked for
+       German or Spanish, boots straight into that language. The English
+       pass above has already rendered, so this only runs when there is
+       actually something to change. */
+    if (lang !== FALLBACK) applyLang();
     openFromHash();
     window.addEventListener("hashchange", openFromHash);
   }

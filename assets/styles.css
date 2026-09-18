@@ -504,7 +504,25 @@ h3 { font-size: var(--t-h3); line-height: 1.15; }
 }
 .lang button.is-active { color: var(--text-100); }
 .lang button:hover { color: var(--star-200); }
+.lang button:focus-visible {
+  outline: 1px solid var(--star-200);
+  outline-offset: 3px;
+}
 .lang__sep { opacity: 0.4; }
+
+/* Three languages instead of two make this the widest thing in the
+   header on a phone. Tighten the gaps and drop the separators rather
+   than let it push the Instagram button off the edge. */
+@media (max-width: 560px) {
+  .lang { gap: 0.15rem; }
+  .lang__sep { display: none; }
+  .lang button {
+    /* a real thumb target, not a 29px sliver */
+    min-height: 44px;
+    padding: 0 0.45rem;
+    letter-spacing: 0.06em;
+  }
+}
 
 /* Burger */
 .burger {

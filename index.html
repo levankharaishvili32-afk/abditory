@@ -38,9 +38,9 @@
 <!-- The ?v= numbers are cache-busters. A browser that already has an old
      copy of a file will happily keep using it; changing the number makes
      the URL different, so it is forced to fetch the new one. If a change
-     of yours does not show up on the live site, bump every ?v=9 to ?v=10. -->
-<link rel="stylesheet" href="assets/fonts.css?v=9">
-<link rel="stylesheet" href="assets/styles.css?v=9">
+     of yours does not show up on the live site, bump every ?v=10 to ?v=11. -->
+<link rel="stylesheet" href="assets/fonts.css?v=10">
+<link rel="stylesheet" href="assets/styles.css?v=10">
 </head>
 
 <body>
@@ -76,12 +76,14 @@
 
       <div class="header__actions">
 
-        <!-- Language switch. Hidden until you set georgianEnabled: true
-             in data/site.js — see the README. -->
-        <div class="lang" id="lang">
-          <button type="button" data-lang="en" class="is-active">EN</button>
-          <span class="lang__sep" aria-hidden="true">/</span>
-          <button type="button" data-lang="ka">ქარ</button>
+        <!-- Language switch. Built at runtime from the LOCALES list at the
+             top of assets/app.js, so adding a language means adding a
+             dictionary in data/site.js and one line there — never here.
+             Georgian joins the list once georgianEnabled is true in
+             data/site.js. What is written below is only what shows if the
+             JavaScript has not run yet. -->
+        <div class="lang" id="lang" role="group" aria-label="Language">
+          <button type="button" data-lang="en" lang="en" class="is-active">EN</button>
         </div>
 
         <a class="ig-btn" id="igHeader" href="#" target="_blank" rel="noopener">
@@ -450,10 +452,10 @@
   </div>
 </div>
 
-<script src="data/site.js?v=9"></script>
-<script src="data/products.js?v=9"></script>
-<script src="assets/form.js?v=9"></script>
-<script src="assets/app.js?v=9"></script>
-<script src="assets/interactive.js?v=9"></script>
+<script src="data/site.js?v=10"></script>
+<script src="data/products.js?v=10"></script>
+<script src="assets/form.js?v=10"></script>
+<script src="assets/app.js?v=10"></script>
+<script src="assets/interactive.js?v=10"></script>
 </body>
 </html>
