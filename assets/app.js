@@ -95,16 +95,31 @@
 
   /* If a photograph 404s the browser draws a broken-image icon, which
      looks worse than having no photo at all. Swap in the placeholder
-     slot instead so the layout survives a missing or expired file. */
+     slot instead so the layout survives a missing or expired file.
+
+     But try once more first. Photos are cached for an hour with a day of
+     stale-while-revalidate, and that applies to a 404 too — so a browser
+     that asked for a photo in the minutes before it was published keeps
+     being told it does not exist long after it does. One retry with a
+     cache-busting query goes past the stored miss and the page heals
+     itself, instead of the visitor seeing empty slots and us hunting a
+     bug that is not in the site. */
   function bindImageFallbacks(root) {
     $$("img", root).forEach(function (img) {
-      img.addEventListener("error", function () {
+      img.addEventListener("error", function onErr() {
+        if (!img.dataset.retried && img.src.indexOf("data:") !== 0) {
+          img.dataset.retried = "1";
+          img.src = img.src.split("#")[0] +
+                    (img.src.indexOf("?") > -1 ? "&" : "?") + "r=" + Date.now();
+          return;                       // the listener stays armed for the retry
+        }
+        img.removeEventListener("error", onErr);
         var holder = img.closest(".card__media, .hero__figure, .qv__stage");
         if (!holder || holder.querySelector(".slot")) { img.remove(); return; }
         var code = holder.getAttribute("data-code") || "";
         $$("img", holder).forEach(function (i) { i.remove(); });
         holder.insertAdjacentHTML("afterbegin", slotMarkup(code));
-      }, { once: true });
+      });
     });
   }
 

@@ -63,8 +63,28 @@ REM  Line endings: this repo is edited only on Windows, so turn off
 REM  Git's LF/CRLF rewriting and the wall of warnings that comes with it.
 git config --local core.autocrlf false
 
+REM  A leftover index.lock makes every git command that touches the
+REM  index fail instantly. It gets left behind whenever something
+REM  interrupts git mid-write. Without this, "git add" below fails,
+REM  nothing gets staged, and the script cheerfully reports success
+REM  while sending nothing at all.
+if exist ".git\index.lock" (
+  echo          clearing a leftover git lock...
+  del /q ".git\index.lock" >nul 2>nul
+)
+
 echo   [2/5]  Packing up your changes...
 git add -A
+if errorlevel 1 (
+  echo.
+  echo  ----------------------------------------------------------
+  echo    Git could not stage this folder, so NOTHING was sent.
+  echo    Send this whole window to Claude.
+  echo  ----------------------------------------------------------
+  echo.
+  pause
+  exit /b 1
+)
 git diff --cached --quiet
 if errorlevel 1 (
   git commit -m "Site update" >nul
@@ -105,7 +125,24 @@ git push -u origin main
 if errorlevel 1 goto failed
 
 echo.
-echo   [5/5]  Done.
+echo   [5/5]  Checking everything went...
+
+set "LEFTOVER="
+for /f "delims=" %%i in ('git status --porcelain 2^>nul') do set "LEFTOVER=1"
+if defined LEFTOVER (
+  echo.
+  echo  ----------------------------------------------------------
+  echo    WARNING - some files did NOT go up:
+  echo.
+  git status --short
+  echo.
+  echo    Send this whole window to Claude.
+  echo  ----------------------------------------------------------
+  echo.
+  pause
+  exit /b 1
+)
+echo          all clear.
 echo.
 echo  ==========================================================
 echo    Your changes are on GitHub.
