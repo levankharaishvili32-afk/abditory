@@ -72,6 +72,54 @@
      panel of stale text — including the order form mounted inside it. */
   var openProductId = null;
 
+  /* ---------------------------------------------------------------
+     SEARCH
+     A free-text query that narrows the grid alongside the category tab
+     and the facet chips. Matching is accent-insensitive and looks at the
+     product in the current language AND in English, so "Totenkopf" and
+     "skull" both find the same boot for a German visitor.
+     --------------------------------------------------------------- */
+  var searchQuery = "";
+  var haystackLang = null;         // which language the cache was built for
+
+  /* "Plateaustiefel" and "plateaustiefel", "Kegelnieten" and "kegelnieten",
+     "ü" and "u": fold all of that so the query does not have to be exact. */
+  function fold(str) {
+    str = String(str || "").toLowerCase();
+    if (str.normalize) str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return str.replace(/\s+/g, " ").trim();
+  }
+
+  function haystack(p) {
+    if (haystackLang !== lang) {       // language changed: drop every cache
+      PRODUCTS.forEach(function (x) { x._hay = null; });
+      haystackLang = lang;
+    }
+    if (!p._hay) {
+      var parts = [p.id, p.sku, p.name, p.blurb, p.details].concat(p.specs || []);
+      if (lang !== FALLBACK) {
+        parts = parts.concat([field(p, "name"), field(p, "blurb"), field(p, "details")], field(p, "specs") || []);
+      }
+      p._hay = fold(parts.join(" "));
+    }
+    return p._hay;
+  }
+
+  /* Every word in the query must appear somewhere. "13 cm" is typed with
+     a space more often than not, so "13cm" in the data must still hit —
+     the fold strips the space on both sides before comparing. */
+  function matchesSearch(p) {
+    if (!searchQuery) return true;
+    var hay = haystack(p);
+    var hayTight = hay.replace(/ /g, "");
+    var words = fold(searchQuery).split(" ");
+    for (var i = 0; i < words.length; i++) {
+      if (!words[i]) continue;
+      if (hay.indexOf(words[i]) === -1 && hayTight.indexOf(words[i]) === -1) return false;
+    }
+    return true;
+  }
+
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -230,11 +278,16 @@
 
     var list = PRODUCTS.filter(function (p) {
       if (activeFilter !== "all" && p.category !== activeFilter) return false;
+      if (!matchesSearch(p)) return false;
       return !extraFilter || extraFilter(p);
     });
 
     if (!list.length) {
-      grid.innerHTML = '<p style="color:var(--text-400)">' + esc(t("cat.empty")) + "</p>";
+      /* a search with no hits says so, and offers the way out */
+      grid.innerHTML = searchQuery
+        ? '<p class="grid__empty">' + esc(t("search.empty")) + " " +
+          '<button type="button" class="grid__empty-clear" data-clear-search>' + esc(t("search.clear")) + "</button></p>"
+        : '<p class="grid__empty">' + esc(t("cat.empty")) + "</p>";
     } else {
       grid.innerHTML = list.map(cardMarkup).join("");
     }
@@ -553,6 +606,14 @@
       var val = t(el.dataset.i18n);
       if (val) el.textContent = val;
     });
+    $$("[data-i18n-ph]").forEach(function (el) {
+      var val = t(el.dataset.i18nPh);
+      if (val) el.setAttribute("placeholder", val);
+    });
+    $$("[data-i18n-aria]").forEach(function (el) {
+      var val = t(el.dataset.i18nAria);
+      if (val) el.setAttribute("aria-label", val);
+    });
     buildMarquee();
     renderHero();
     renderGrid();
@@ -575,6 +636,43 @@
   /* The picker is built from LOCALES rather than written into the HTML,
      so adding a language means adding a dictionary and one line up top —
      the markup never has to be touched again. */
+  function bindSearch() {
+    var form = $("#search");
+    var input = $("#searchInput");
+    var clear = $("#searchClear");
+    if (!form || !input) return;
+
+    function apply(value) {
+      searchQuery = value;
+      form.classList.toggle("has-query", !!searchQuery);
+      if (clear) clear.hidden = !searchQuery;
+      renderGrid();
+    }
+
+    input.addEventListener("input", function () { apply(input.value); });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && input.value) { input.value = ""; apply(""); }
+    });
+    if (clear) {
+      clear.addEventListener("click", function () {
+        input.value = "";
+        apply("");
+        input.focus();
+      });
+    }
+    /* the "clear search" link inside the empty state is rendered later */
+    var grid = $("#grid");
+    if (grid) {
+      grid.addEventListener("click", function (e) {
+        var b = e.target.closest ? e.target.closest("[data-clear-search]") : null;
+        if (!b) return;
+        input.value = "";
+        apply("");
+        input.focus();
+      });
+    }
+  }
+
   function bindLang() {
     var box = $("#lang");
     if (!box) return;
@@ -620,6 +718,7 @@
     renderGrid();
     mountOrderForm();
     bindFilters();
+    bindSearch();
     bindHeader();
     bindReveals();
     bindLang();

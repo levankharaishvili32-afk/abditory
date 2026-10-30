@@ -780,6 +780,65 @@ h3 { font-size: var(--t-h3); line-height: 1.15; }
 .filter .star { opacity: 0; transition: opacity 0.3s var(--ease); }
 .filter.is-active .star { opacity: 1; }
 
+/* --- search ------------------------------------------------------- */
+.search {
+  margin-bottom: clamp(1.1rem, 3vw, 1.6rem);
+  max-width: 34rem;
+}
+.search__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--line-soft);
+  padding: 0.35rem 0;
+  transition: border-color 0.35s var(--ease);
+}
+.search__field:focus-within { border-color: var(--star-200); }
+.search__icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  color: var(--text-400);
+  transition: color 0.35s var(--ease);
+}
+.search__field:focus-within .search__icon,
+.search.has-query .search__icon { color: var(--text-100); }
+.search__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  background: transparent;
+  border: 0;
+  color: var(--text-100);
+  font-family: inherit;
+  font-size: var(--t-body, 1rem);
+  letter-spacing: 0.02em;
+}
+.search__input::placeholder {
+  color: var(--text-400);
+  font-size: var(--t-label);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.search__input:focus { outline: none; }
+/* the browser's own x in type=search would fight ours */
+.search__input::-webkit-search-cancel-button,
+.search__input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
+.search__clear {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  display: grid;
+  place-content: center;
+  color: var(--text-300);
+  transition: color 0.3s var(--ease);
+}
+.search__clear svg { width: 14px; height: 14px; }
+.search__clear:hover { color: var(--text-100); }
+.search__clear:focus-visible { outline: 1px solid var(--star-200); outline-offset: 2px; }
+.search__clear[hidden] { display: none; }
+
 /* On phones the four filters wrap to two rows, so the count gets its own
    line rather than sitting next to a half-empty row. */
 .filter__count {
@@ -790,6 +849,22 @@ h3 { font-size: var(--t-h3); line-height: 1.15; }
   color: var(--text-400);
   padding-top: 0.35rem;
 }
+
+/* the empty state: one quiet line, and a way out when a search found nothing */
+.grid__empty {
+  grid-column: 1 / -1;
+  color: var(--text-400);
+  font-size: var(--t-body, 1rem);
+}
+.grid__empty-clear {
+  color: var(--text-200);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--line-mid);
+  transition: color 0.3s var(--ease), text-decoration-color 0.3s var(--ease);
+}
+.grid__empty-clear:hover { color: var(--star-200); text-decoration-color: var(--star-200); }
+.grid__empty-clear:focus-visible { outline: 1px solid var(--star-200); outline-offset: 3px; }
 
 .grid {
   display: grid;

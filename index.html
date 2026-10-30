@@ -38,9 +38,9 @@
 <!-- The ?v= numbers are cache-busters. A browser that already has an old
      copy of a file will happily keep using it; changing the number makes
      the URL different, so it is forced to fetch the new one. If a change
-     of yours does not show up on the live site, bump every ?v=10 to ?v=11. -->
-<link rel="stylesheet" href="assets/fonts.css?v=10">
-<link rel="stylesheet" href="assets/styles.css?v=10">
+     of yours does not show up on the live site, bump every ?v=11 to ?v=12. -->
+<link rel="stylesheet" href="assets/fonts.css?v=11">
+<link rel="stylesheet" href="assets/styles.css?v=11">
 </head>
 
 <body>
@@ -185,6 +185,28 @@
           <h2 data-i18n="cat.title">Catalogue</h2>
           <p data-i18n="cat.intro">Everything is made to order. Sizes, heights, hardware and finishes are chosen with you before anything is cut.</p>
         </div>
+
+        <!-- Search. Matches name, description, details, spec bullets, the
+             product code and the SKU, in the current language and in
+             English, ignoring accents. Composes with the category tabs
+             and the facet chips below — all three narrow together. -->
+        <form class="search" id="search" role="search" data-reveal onsubmit="return false">
+          <div class="search__field">
+            <svg class="search__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.75 12.75L17 17"/>
+            </svg>
+            <input class="search__input" id="searchInput" type="search" autocomplete="off"
+                   autocapitalize="off" spellcheck="false" enterkeyhint="search"
+                   placeholder="Search spikes, skulls, 13 cm, a code…"
+                   aria-label="Search the catalogue" data-i18n-ph="search.placeholder">
+            <button class="search__clear" id="searchClear" type="button" hidden
+                    aria-label="Clear search" data-i18n-aria="search.clear">
+              <svg viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <path d="M3 3l10 10M13 3L3 13"/>
+              </svg>
+            </button>
+          </div>
+        </form>
 
         <div class="filters" role="tablist" aria-label="Filter products" data-reveal>
           <button class="filter is-active" role="tab" aria-selected="true" data-filter="all">
@@ -452,10 +474,10 @@
   </div>
 </div>
 
-<script src="data/site.js?v=10"></script>
-<script src="data/products.js?v=10"></script>
-<script src="assets/form.js?v=10"></script>
-<script src="assets/app.js?v=10"></script>
-<script src="assets/interactive.js?v=10"></script>
+<script src="data/site.js?v=11"></script>
+<script src="data/products.js?v=11"></script>
+<script src="assets/form.js?v=11"></script>
+<script src="assets/app.js?v=11"></script>
+<script src="assets/interactive.js?v=11"></script>
 </body>
 </html>
