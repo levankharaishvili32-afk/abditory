@@ -43,6 +43,24 @@ window.ABDITORY_SITE = {
   // Shown in the footer.
   shipsFrom: "Tbilisi, Georgia",
 
+  // Site-wide sale. This one block drives everything: the badge on every
+  // product photo, the struck-through original price next to the sale
+  // price, and the sale_price in feed.xml. When the sale ends, set
+  // active to false and run SEND-TO-WEB.bat — nothing else to undo.
+  // The label is shown exactly as written in every language.
+  sale: {
+    active: true,
+    percent: 20,
+    label: "Black Friday",
+    // While the sale runs, this picture REPLACES the featured product in
+    // the hero (images/bf-character.webp + .png, on the dark background).
+    // Leave empty to keep the product photo and show the character in the
+    // small banner instead.
+    heroImage: "bf-character",
+    // Where the banner's button goes.
+    bannerLink: "#catalogue"
+  },
+
   // Set to true once you have translated everything in i18n.js,
   // and the EN / ქარ language switch appears in the header.
   georgianEnabled: false
@@ -110,6 +128,11 @@ window.ABDITORY_I18N = {
     "search.placeholder": "Search spikes, skulls, 13 cm, a code\u2026",
     "search.clear": "Clear search",
     "search.empty": "Nothing matches that. Try fewer words, or",
+    "sale.was": "was",
+    "sale.banner.title": "\u2212{pct}% on everything",
+    "sale.banner.sub": "This weekend only. The prices below already include it.",
+    "sale.banner.cta": "Shop the sale",
+    "sale.banner.alt": "ABDITORY character holding a {label} sign",
     "product.dmnote": "Orders are taken by direct message. Send us the code above and your size.",
 
     "custom.eyebrow": "Commissions",
@@ -247,6 +270,11 @@ window.ABDITORY_I18N = {
     "search.placeholder": "ეკლები, თავის ქალები, 13 სმ, კოდი\u2026",
     "search.clear": "ძიების გასუფთავება",
     "search.empty": "ვერაფერი მოიძებნა. სცადეთ ნაკლები სიტყვა, ან",
+    "sale.was": "იყო",
+    "sale.banner.title": "\u2212{pct}% ყველაფერზე",
+    "sale.banner.sub": "მხოლოდ ამ შაბათ-კვირას. ქვემოთ ფასები უკვე ფასდაკლებულია.",
+    "sale.banner.cta": "ფასდაკლების ნახვა",
+    "sale.banner.alt": "ABDITORY-ს პერსონაჟი {label} დაფით",
     "product.dmnote": "შეკვეთა მიიღება პირად შეტყობინებაში. მოგვწერეთ ზემოთ მითითებული კოდი და თქვენი ზომა.",
 
     "custom.eyebrow": "შეკვეთები",
@@ -380,6 +408,11 @@ window.ABDITORY_I18N = {
     "search.placeholder": "Spikes, Totenköpfe, 13 cm, Artikelnr.\u2026",
     "search.clear": "Suche löschen",
     "search.empty": "Nichts gefunden. Weniger Wörter versuchen, oder",
+    "sale.was": "vorher",
+    "sale.banner.title": "\u2212{pct}% auf alles",
+    "sale.banner.sub": "Nur dieses Wochenende. Die Preise unten sind bereits reduziert.",
+    "sale.banner.cta": "Zum Sale",
+    "sale.banner.alt": "ABDITORY-Figur mit einem {label}-Schild",
     "product.dmnote": "Bestellungen laufen über Direktnachricht. Schick uns den Code oben und deine Größe.",
     "custom.eyebrow": "Aufträge",
     "custom.title": "Maßanfertigung",
@@ -508,6 +541,11 @@ window.ABDITORY_I18N = {
     "search.placeholder": "Pinchos, calaveras, 13 cm, referencia\u2026",
     "search.clear": "Borrar búsqueda",
     "search.empty": "Nada coincide. Prueba con menos palabras, o",
+    "sale.was": "antes",
+    "sale.banner.title": "\u2212{pct}% en todo",
+    "sale.banner.sub": "Solo este fin de semana. Los precios de abajo ya lo incluyen.",
+    "sale.banner.cta": "Ver las rebajas",
+    "sale.banner.alt": "Personaje de ABDITORY con un cartel de {label}",
     "product.dmnote": "Los pedidos se hacen por mensaje directo. Envíanos el código de arriba y tu talla.",
     "custom.eyebrow": "Encargos",
     "custom.title": "Pedidos a medida",

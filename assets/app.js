@@ -223,6 +223,10 @@
           return;                       // the listener stays armed for the retry
         }
         img.removeEventListener("error", onErr);
+        /* The hover-swap second shot is a bonus, not the photo. If it is
+           the one that failed, drop it quietly and leave the main photo
+           standing — otherwise one missing detail shot blanks the card. */
+        if (img.classList.contains("card__img--alt")) { img.remove(); return; }
         var holder = img.closest(".card__media, .hero__figure, .qv__stage");
         if (!holder || holder.querySelector(".slot")) { img.remove(); return; }
         var code = holder.getAttribute("data-code") || "";
@@ -232,9 +236,75 @@
     });
   }
 
+  /* ---------------------------------------------------------------
+     SALE
+     SITE.sale in site.js is the only control. Prices are discounted at
+     render time and rounded to whole euros, so the number a shopper sees
+     is the number Leo quotes — never 103.99.
+     --------------------------------------------------------------- */
+  var SALE = SITE.sale || {};
+  function saleOn() { return !!(SALE.active && SALE.percent > 0); }
+  function hasPrice(p) { return !(p.price === null || p.price === undefined || p.price === ""); }
+  function salePrice(p) { return Math.round(p.price * (100 - SALE.percent) / 100); }
+  function money(n) { return n + " " + (SITE.currency || "₾"); }
+
   function priceLabel(p) {
-    if (p.price === null || p.price === undefined || p.price === "") return t("product.price_request");
-    return p.price + " " + (SITE.currency || "₾");
+    if (!hasPrice(p)) return t("product.price_request");
+    return money(saleOn() ? salePrice(p) : p.price);
+  }
+
+  /* Markup version: the old price struck through, the new one beside it.
+     Screen readers get both numbers spelled out, not a crossed-out one. */
+  function priceMarkup(p) {
+    if (!hasPrice(p)) return esc(t("product.price_request"));
+    if (!saleOn()) return esc(money(p.price));
+    return '<s class="price__was" aria-label="' + esc(t("sale.was")) + ' ' + esc(money(p.price)) + '">' +
+             esc(money(p.price)) + "</s> " +
+           '<span class="price__now">' + esc(money(salePrice(p))) + "</span>";
+  }
+
+  /* The hero banner: the character with the sign, the offer, one button.
+     Built from SITE.sale and the sale.banner.* strings; the host div is
+     emptied when the sale is off so the hero closes up as if it were
+     never there. */
+  function renderSaleBanner() {
+    var host = $("#saleBanner");
+    if (!host) return;
+    if (!saleOn()) { host.innerHTML = ""; return; }
+    var fill = function (k) {
+      return esc(t(k).replace("{pct}", SALE.percent).replace("{label}", SALE.label || ""));
+    };
+    /* The character is either in the hero figure or in this panel — never
+       both. With heroImage set the panel is text only. */
+    var art = SALE.bannerImage || SALE.heroImage;
+    var img = art
+      ? '<picture class="sale-banner__art">' +
+          '<source srcset="images/' + esc(art) + '.webp" type="image/webp">' +
+          '<img src="images/' + esc(art) + '.png" alt="' + fill("sale.banner.alt") + '" loading="eager" decoding="async">' +
+        "</picture>"
+      : "";
+    host.innerHTML =
+      '<aside class="sale-banner' + (img ? "" : " sale-banner--text") + '" data-reveal>' +
+        img +
+        '<div class="sale-banner__body">' +
+          '<span class="sale-banner__kicker"><i class="star" aria-hidden="true"></i>' + esc(SALE.label || "") + "</span>" +
+          '<strong class="sale-banner__title">' + fill("sale.banner.title") + "</strong>" +
+          '<span class="sale-banner__sub">' + fill("sale.banner.sub") + "</span>" +
+          '<a class="sale-banner__cta" href="' + esc(SALE.bannerLink || "#catalogue") + '">' +
+            fill("sale.banner.cta") + ' <span aria-hidden="true">\u2192</span></a>' +
+        "</div>" +
+      "</aside>";
+  }
+
+  /* The tag that sits on every product photo while the sale runs. One
+     element, two lines: the label Leo set, and the percentage. */
+  function saleTag() {
+    if (!saleOn()) return "";
+    return '<span class="sale-tag" aria-label="' + esc(SALE.label || "") + " \u2212" + SALE.percent + '%">' +
+             '<i class="star" aria-hidden="true"></i>' +
+             '<b>\u2212' + SALE.percent + '%</b>' +
+             (SALE.label ? '<em>' + esc(SALE.label) + "</em>" : "") +
+           "</span>";
   }
 
   /* ===================================================================
@@ -261,12 +331,13 @@
     return (
       '<button class="card" type="button" data-id="' + esc(p.id) + '" data-cat="' + esc(p.category) + '">' +
         '<span class="card__media" data-code="' + esc(p.id) + '">' + tag + media +
+          (p.sold_out ? "" : saleTag()) +
           '<span class="card__view">' + esc(t("product.view")) + "</span>" +
         "</span>" +
         '<span class="card__body">' +
           '<span class="card__name">' + esc(field(p, "name")) + "</span>" +
           '<span class="card__blurb">' + esc(field(p, "blurb")) + "</span>" +
-          '<span class="card__price">' + esc(priceLabel(p)) + "</span>" +
+          '<span class="card__price">' + priceMarkup(p) + "</span>" +
         "</span>" +
       "</button>"
     );
@@ -337,14 +408,33 @@
     var feat = PRODUCTS.filter(function (p) { return p.featured; })[0] || PRODUCTS[0];
     if (!feat) return;
 
+    $$("img, picture, .slot, .sale-tag", fig).forEach(function (el) { el.remove(); });
+
+    /* Sale mode: the character with the sign takes the boot's place. It is
+       a cut-out, so it is shown whole on the dark background rather than
+       cropped to fill, and the product caption comes off — it is not a
+       product. The tag still gives the number the sign does not. */
+    document.body.classList.toggle("sale-hero", !!(saleOn() && SALE.heroImage));
+    if (saleOn() && SALE.heroImage) {
+      fig.classList.add("hero__figure--sale");
+      fig.removeAttribute("data-code");
+      if (cap) cap.textContent = "";
+      fig.insertAdjacentHTML("afterbegin",
+        '<picture>' +
+          '<source srcset="images/' + esc(SALE.heroImage) + '.webp" type="image/webp">' +
+          '<img src="images/' + esc(SALE.heroImage) + '.png" alt="' +
+            esc(t("sale.banner.alt").replace("{label}", SALE.label || "")) +
+            '" fetchpriority="high" decoding="async">' +
+        "</picture>" + saleTag());
+      return;
+    }
+    fig.classList.remove("hero__figure--sale");
+
     if (cap) cap.textContent = field(feat, "name");
 
-    var existing = fig.querySelector("img, .slot");
-    if (existing) existing.remove();
-
-    var html = (feat.images && feat.images.length)
+    var html = ((feat.images && feat.images.length)
       ? '<img src="images/' + esc(feat.images[0]) + '" alt="' + esc(field(feat, "name")) + '" fetchpriority="high" decoding="async">'
-      : slotMarkup(feat.id);
+      : slotMarkup(feat.id)) + (feat.sold_out ? "" : saleTag());
 
     fig.setAttribute("data-code", feat.id);
     fig.insertAdjacentHTML("afterbegin", html);
@@ -374,7 +464,7 @@
 
     $("#qvCat").textContent = t("cat." + p.category);
     $("#qvName").textContent = field(p, "name");
-    $("#qvPrice").textContent = p.sold_out ? t("product.soldout") : priceLabel(p);
+    $("#qvPrice").innerHTML = p.sold_out ? esc(t("product.soldout")) : priceMarkup(p);
     $("#qvDetails").textContent = field(p, "details");
     $("#qvCode").textContent = p.id;
 
@@ -402,7 +492,8 @@
 
     stage.setAttribute("data-code", p.id);
     if (imgs.length) {
-      stage.innerHTML = '<img src="images/' + esc(imgs[0]) + '" alt="' + esc(field(p, "name")) + '">';
+      stage.innerHTML = '<img src="images/' + esc(imgs[0]) + '" alt="' + esc(field(p, "name")) + '">' +
+                        (p.sold_out ? "" : saleTag());
       bindImageFallbacks(stage);
       /* One photo needs no thumbnail strip — a single thumb under a single
          image is just clutter. And a thumb whose file is missing removes
@@ -425,7 +516,8 @@
              detail shot replaces the main one — the magnifier and the
              full-screen viewer both read from this same element. */
           stage.innerHTML = '<img src="images/' + esc(b.dataset.src) +
-                            '" alt="' + esc(field(p, "name")) + '">';
+                            '" alt="' + esc(field(p, "name")) + '">' +
+                            (p.sold_out ? "" : saleTag());
           bindImageFallbacks(stage);
           $$(".qv__thumb", thumbs).forEach(function (x) {
             x.classList.remove("is-active");
@@ -616,6 +708,7 @@
     });
     buildMarquee();
     renderHero();
+    renderSaleBanner();
     renderGrid();
     mountOrderForm();
     applySite();
@@ -714,6 +807,7 @@
     buildStarfield();
     buildMarquee();
     renderHero();
+    renderSaleBanner();
     renderAboutFigure();
     renderGrid();
     mountOrderForm();

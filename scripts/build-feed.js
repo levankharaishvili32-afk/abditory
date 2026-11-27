@@ -77,6 +77,18 @@ for (const p of PRODUCTS) {
   included.push(p);
 }
 
+// Sale pricing follows SITE.sale, the same block that drives the badges on
+// the site. Rounded to whole euros exactly as app.js does, so the feed and
+// the page never disagree by a cent — Meta and Google compare the two.
+// When the sale is off this emits nothing and the feed is unchanged.
+const SALE = SITE.sale || {};
+const saleOn = !!(SALE.active && SALE.percent > 0);
+function salePriceLine(p) {
+  if (!saleOn) return '';
+  const sp = Math.round(p.price * (100 - SALE.percent) / 100);
+  return `      <g:sale_price>${sp.toFixed(2)} ${CURRENCY}</g:sale_price>`;
+}
+
 const items = included.map((p) => {
   const link = `${BASE}/#product/${encodeURIComponent(p.id)}`;
   const image = `${BASE}/images/${p.images[0].split('/').map(encodeURIComponent).join('/')}`;
@@ -94,7 +106,7 @@ const items = included.map((p) => {
 ${extras ? extras + '\n' : ''}      <g:availability>${xml(AVAILABILITY)}</g:availability>
       <g:condition>new</g:condition>
       <g:price>${p.price.toFixed(2)} ${CURRENCY}</g:price>
-      <g:brand>${xml(BRAND)}</g:brand>
+${salePriceLine(p) ? salePriceLine(p) + '\n' : ''}      <g:brand>${xml(BRAND)}</g:brand>
       <g:google_product_category>${xml(p.googleCategory || 'Apparel &amp; Accessories > Shoes')}</g:google_product_category>
       <g:product_type>${xml(p.productType || 'Shoes')}</g:product_type>
       <g:identifier_exists>no</g:identifier_exists>

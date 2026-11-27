@@ -38,9 +38,9 @@
 <!-- The ?v= numbers are cache-busters. A browser that already has an old
      copy of a file will happily keep using it; changing the number makes
      the URL different, so it is forced to fetch the new one. If a change
-     of yours does not show up on the live site, bump every ?v=11 to ?v=12. -->
-<link rel="stylesheet" href="assets/fonts.css?v=11">
-<link rel="stylesheet" href="assets/styles.css?v=11">
+     of yours does not show up on the live site, bump every ?v=12 to ?v=13. -->
+<link rel="stylesheet" href="assets/fonts.css?v=12">
+<link rel="stylesheet" href="assets/styles.css?v=12">
 </head>
 
 <body>
@@ -146,6 +146,10 @@
             <a class="btn" href="#catalogue"><span data-i18n="hero.cta1">See the catalogue</span></a>
             <a class="btn btn--blood js-ig" href="#" target="_blank" rel="noopener"><span data-i18n="hero.cta2">Order on Instagram</span></a>
           </div>
+
+          <!-- Sale banner. Rendered by assets/app.js from SITE.sale in
+               data/site.js; empty (and takes no space) when the sale is off. -->
+          <div class="sale-banner-host" id="saleBanner"></div>
         </div>
 
         <div class="hero__scroll" aria-hidden="true">
@@ -474,10 +478,10 @@
   </div>
 </div>
 
-<script src="data/site.js?v=11"></script>
-<script src="data/products.js?v=11"></script>
-<script src="assets/form.js?v=11"></script>
-<script src="assets/app.js?v=11"></script>
-<script src="assets/interactive.js?v=11"></script>
+<script src="data/site.js?v=12"></script>
+<script src="data/products.js?v=12"></script>
+<script src="assets/form.js?v=12"></script>
+<script src="assets/app.js?v=12"></script>
+<script src="assets/interactive.js?v=12"></script>
 </body>
 </html>
